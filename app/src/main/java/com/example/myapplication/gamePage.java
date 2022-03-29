@@ -204,26 +204,12 @@ public class gamePage extends AppCompatActivity {
                 }
             }
         });
-
-//        micButton.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View view, MotionEvent motionEvent) {
-//                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-//                    micButton.setImageResource(R.drawable.ic_baseline_mic_off_24);
-//                    speechRecognizer.stopListening();
-//                }
-//                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-//                    micButton.setImageResource(R.drawable.ic_baseline_mic_24);
-//                    speechRecognizer.startListening(speechRecognizerIntent);
-//                }
-//                return false;
-//            }
-//        });
     }
 
 
 
     protected void onStop(){
+        //todo: make sure the listening thread stops when we leave the page and get back
         super.onStop();
         speechRecognizer.stopListening();
     }
@@ -247,6 +233,5 @@ public class gamePage extends AppCompatActivity {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
         }
-
     }
 }
