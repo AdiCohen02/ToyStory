@@ -40,6 +40,7 @@ public class gamePage extends AppCompatActivity {
     private Button helpBtn;
     private boolean is_on;
 
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         // home & helper & mic button & text are created
@@ -50,6 +51,7 @@ public class gamePage extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             checkPermission();
         }
+        //hi
 
         editText = findViewById(R.id.text);
         micButton = findViewById(R.id.button);
@@ -139,6 +141,13 @@ public class gamePage extends AppCompatActivity {
                     case SpeechRecognizer.ERROR_NO_MATCH:
                         mError = " no match" ;
                         speechRecognizer.startListening(speechRecognizerIntent);
+                        View someView = findViewById(R.id.activity);
+
+                        // Find the root view
+                        View root = someView.getRootView();
+
+                        // Set the color
+                        root.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_bright));
                         break;
                     case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
                         mError = " recogniser busy" ;
@@ -154,11 +163,30 @@ public class gamePage extends AppCompatActivity {
                 editText.setHint("onResults...");
                 ArrayList<String> data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                 editText.setText(data.get(0));
-                speechRecognizer.startListening(speechRecognizerIntent);
+            View someView = findViewById(R.id.activity);
+
+            // Find the root view
+            View root = someView.getRootView();
+
+            // Set the color
+            root.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+           // try {
+            //    Thread.sleep(7000);
+          //  } catch (InterruptedException e) {
+            //    e.printStackTrace();
+           // }
+            //speechRecognizer.startListening(speechRecognizerIntent);
             }
 
             @Override
             public void onPartialResults(Bundle partialResults) {
+                View someView = findViewById(R.id.activity);
+
+                // Find the root view
+                View root = someView.getRootView();
+
+                // Set the color
+                root.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
                 ArrayList data = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                 String word = (String) data.get(data.size() - 1);
                 editText.setText(word);
