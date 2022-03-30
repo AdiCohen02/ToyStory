@@ -39,7 +39,6 @@ public class gamePage extends AppCompatActivity {
     private Button getHomeBtn;
     private Button helpBtn;
     private boolean is_on;
-    //todo add public empty list fot freq
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -108,12 +107,18 @@ public class gamePage extends AppCompatActivity {
                 editText.setHint("onEndOfSpeech...");
             }
 
+//            @Override
+//            public void onError(int i) {
+//
+//            }
+
             @Override
             public void onError(int error) {
                 String mError = "";
                 switch (error) {
                     case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
                         editText.setHint("network timeout");
+//                        speechRecognizer.startListening(speechRecognizerIntent);
                         break;
                     case SpeechRecognizer.ERROR_NETWORK:
                         editText.setHint("network, Please check data bundle or network settings");
@@ -123,6 +128,7 @@ public class gamePage extends AppCompatActivity {
                         return;
                     case SpeechRecognizer.ERROR_SERVER:
                         mError = " server";
+//                        speechRecognizer.startListening(speechRecognizerIntent);
                         break;
                     case SpeechRecognizer.ERROR_CLIENT:
                         mError = " client";
@@ -145,7 +151,6 @@ public class gamePage extends AppCompatActivity {
 
         @Override
             public void onResults(Bundle bundle) {
-                sampleAudio();
                 editText.setHint("onResults...");
                 ArrayList<String> data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                 editText.setText(data.get(0));
@@ -154,7 +159,6 @@ public class gamePage extends AppCompatActivity {
 
             @Override
             public void onPartialResults(Bundle partialResults) {
-                sampleAudio();
                 ArrayList data = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                 String word = (String) data.get(data.size() - 1);
                 editText.setText(word);
@@ -168,25 +172,7 @@ public class gamePage extends AppCompatActivity {
         });
     }
 
-    protected void sampleAudio(){
-        // called when voice recognized.
-        //todo: checks if the current time - last audio time is bigger then BUFFER VALUE.
-        // if it is - adds time to the list. otherwise pass
-        // can also be not in buffer - your desicion.
-        // status:
-    }
 
-    protected Integer return_duriation(){
-        // todo: is there was no result for X_VAL - return total sound length.
-        // status:
-        // run in diffrent THREAD
-        return 5; // otherwise we recieve an error.
-    }
-
-    //todo xml - add and display duriation
-    protected void display_duriation(){
-        // rercives a int and display it for 3 sec
-    }
 
     @Override
     protected void onStart(){
@@ -201,9 +187,14 @@ public class gamePage extends AppCompatActivity {
             public void onClick(View view) {
                 if (is_on == true){
                     micButton.setImageResource(R.drawable.ic_baseline_mic_off_24);
-                    speechRecognizer.stopListening();
+//                    speechRecognizer.stopListening();
                     editText.setText("Tap to Speak...");
                     speechRecognizer.cancel();
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     is_on = false;
                 }
                 else{
@@ -216,11 +207,11 @@ public class gamePage extends AppCompatActivity {
     }
 
 
+
     protected void onStop(){
         //todo: make sure the listening thread stops when we leave the page and get back
         super.onStop();
         speechRecognizer.stopListening();
-        speechRecognizer.cancel();
     }
 
     @Override
