@@ -33,6 +33,11 @@
         <activity
             android:name=".helper"
             android:exported="false" />
+        <activity
+            android:name=".avgSoundLevel"
+            android:exported="false">
+
+        </activity>
 
     </application>
 

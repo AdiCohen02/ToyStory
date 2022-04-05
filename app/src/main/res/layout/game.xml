@@ -47,14 +47,30 @@
             android:id="@+id/text"
             android:layout_centerInParent="true"
             />
+
         <ImageView
+            android:id="@+id/button"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"
             android:backgroundTint="#F9F8FA"
             android:paddingRight="10dp"
-            android:src="@drawable/ic_baseline_mic_off_24"
-            android:layout_alignParentRight="true"
-            android:id="@+id/button"/>
+            android:src="@drawable/ic_baseline_mic_off_24" />
+
+
     </RelativeLayout>
+
+    <com.example.myapplication.voiceEditor.WaveformView
+        android:id="@+id/rawDataView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="-7dp"
+        android:layout_marginBottom="244dp">
+
+    </com.example.myapplication.voiceEditor.WaveformView>
 
 </RelativeLayout>

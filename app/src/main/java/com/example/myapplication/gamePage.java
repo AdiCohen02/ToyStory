@@ -2,7 +2,6 @@ package com.example.myapplication;
 
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -13,21 +12,27 @@ import android.speech.SpeechRecognizer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
-import android.view.MotionEvent;
-import java.util.Locale;
-
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.myapplication.voiceEditor.PlaybackThread;
+import com.example.myapplication.voiceEditor.RecordingThread;
+import com.newventuresoftware.waveform.WaveformView;
 
+import org.apache.commons.io.IOUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.ShortBuffer;
 import java.util.ArrayList;
+import java.util.Locale;
 
 @SuppressWarnings("ALL")
 public class gamePage extends AppCompatActivity {
@@ -39,6 +44,11 @@ public class gamePage extends AppCompatActivity {
     private Button getHomeBtn;
     private Button helpBtn;
     private boolean is_on;
+    private WaveformView mRealtimeWaveformView;
+    private RecordingThread mRecordingThread;
+    private PlaybackThread mPlaybackThread;
+    private static final int REQUEST_RECORD_AUDIO = 13;
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -188,7 +198,7 @@ public class gamePage extends AppCompatActivity {
                 if (is_on == true){
                     micButton.setImageResource(R.drawable.ic_baseline_mic_off_24);
 //                    speechRecognizer.stopListening();
-                    editText.setText("Tap to Speak...");
+                    editText.setHint("Tap to Speak...");
                     speechRecognizer.cancel();
                     try {
                         Thread.sleep(500);
@@ -203,10 +213,20 @@ public class gamePage extends AppCompatActivity {
                     is_on = true;
                 }
             }
+
+
+
         });
+
+        startAudioRecordingSafe();
+
+        short[] samples = new short[] {0, 4, 5};
+        try {
+            samples = getAudioSample();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
     }
-
-
 
     protected void onStop(){
         //todo: make sure the listening thread stops when we leave the page and get back
@@ -219,6 +239,36 @@ public class gamePage extends AppCompatActivity {
         super.onDestroy();
         speechRecognizer.destroy();
     }
+
+    final WaveformView mPlaybackView = (WaveformView) findViewById(R.id.rawDataView);
+
+    private void startAudioRecordingSafe() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.RECORD_AUDIO)
+                == PackageManager.PERMISSION_GRANTED) {
+            mRecordingThread.startRecording();
+        } else {
+            checkPermission();
+        }
+    }
+
+    private short[] getAudioSample() throws IOException{
+        InputStream is = getResources().openRawResource(R.raw.jinglebells);
+        byte[] data;
+        try {
+            data = IOUtils.toByteArray(is);
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+        }
+
+        ShortBuffer sb = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer();
+        short[] samples = new short[sb.limit()];
+        sb.get(samples);
+        return samples;
+    }
+
+
 
     private void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
