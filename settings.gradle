@@ -5,7 +5,7 @@ dependencyResolutionManagement {
         mavenCentral()
         jcenter() // Warning: this repository is going to shut down soonallprojects {
         flatDir {
-            dirs 'libs'
+            dirs './app/libs'
         }
 
     }
@@ -13,4 +13,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "My Application"
-include ':app'
+include ':app', ':waveform'
