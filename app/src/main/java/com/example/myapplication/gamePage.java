@@ -24,13 +24,6 @@ import com.example.myapplication.voiceEditor.PlaybackThread;
 import com.example.myapplication.voiceEditor.RecordingThread;
 import com.newventuresoftware.waveform.WaveformView;
 
-import org.apache.commons.io.IOUtils;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -215,17 +208,16 @@ public class gamePage extends AppCompatActivity {
             }
 
 
-
         });
 
-        startAudioRecordingSafe();
-
-        short[] samples = new short[] {0, 4, 5};
-        try {
-            samples = getAudioSample();
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        }
+//        startAudioRecordingSafe();
+//
+//        short[] samples = new short[] {0, 4, 5};
+//        try {
+//            samples = getAudioSample();
+//        } catch (IOException ioException) {
+//            ioException.printStackTrace();
+//        }
     }
 
     protected void onStop(){
@@ -240,7 +232,7 @@ public class gamePage extends AppCompatActivity {
         speechRecognizer.destroy();
     }
 
-    final WaveformView mPlaybackView = (WaveformView) findViewById(R.id.rawDataView);
+//    final WaveformView mPlaybackView = (WaveformView) findViewById(R.id.rawDataView);
 
     private void startAudioRecordingSafe() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.RECORD_AUDIO)
@@ -251,23 +243,22 @@ public class gamePage extends AppCompatActivity {
         }
     }
 
-    private short[] getAudioSample() throws IOException{
-        InputStream is = getResources().openRawResource(R.raw.jinglebells);
-        byte[] data;
-        try {
-            data = IOUtils.toByteArray(is);
-        } finally {
-            if (is != null) {
-                is.close();
-            }
-        }
-
-        ShortBuffer sb = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer();
-        short[] samples = new short[sb.limit()];
-        sb.get(samples);
-        return samples;
-    }
-
+//    private short[] getAudioSample() throws IOException{
+//        InputStream is = getResources().openRawResource(R.raw.jinglebells);
+//        byte[] data;
+//        try {
+//            data = IOUtils.toByteArray(is);
+//        } finally {
+//            if (is != null) {
+//                is.close();
+//            }
+//        }
+//
+//        ShortBuffer sb = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer();
+//        short[] samples = new short[sb.limit()];
+//        sb.get(samples);
+//        return samples;
+//    }
 
 
     private void checkPermission() {
