@@ -2,8 +2,10 @@ package com.example.myapplication;
 
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
@@ -13,9 +15,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -41,6 +45,8 @@ public class gamePage extends AppCompatActivity {
     private RecordingThread mRecordingThread;
     private PlaybackThread mPlaybackThread;
     private static final int REQUEST_RECORD_AUDIO = 13;
+    public String chosenWord = "";
+    private Button chooseWordBtn;
 
 
     @Override
@@ -58,6 +64,14 @@ public class gamePage extends AppCompatActivity {
         micButton = findViewById(R.id.button);
         getHomeBtn = findViewById(R.id.getBackHomeBtn);
         helpBtn = findViewById(R.id.helpBtn);
+        chooseWordBtn = findViewById(R.id.chooseWordBtn);
+
+        chooseWordBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showAlertDialog();
+            }
+        });
 
         getHomeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,10 +168,26 @@ public class gamePage extends AppCompatActivity {
 
         @Override
             public void onResults(Bundle bundle) {
-                editText.setHint("onResults...");
-                ArrayList<String> data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-                editText.setText(data.get(0));
-                speechRecognizer.startListening(speechRecognizerIntent);
+            editText.setHint("onResults...");
+            ArrayList<String> data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+            editText.setText(data.get(0));
+            if (chosenWord.isEmpty()){
+                if (data.get(0).equals(chosenWord)) {
+                    try {
+                        shouldReact();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } }
+            }else{
+                if (!data.get(0).equals("")) {
+                    try {
+                        shouldReact();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } } }
+        
+            speechRecognizer.startListening(speechRecognizerIntent);
+
             }
 
             @Override
@@ -165,8 +195,12 @@ public class gamePage extends AppCompatActivity {
                 ArrayList data = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                 String word = (String) data.get(data.size() - 1);
                 editText.setText(word);
-
-            }
+                if (!data.get(0).equals("")) {
+                    try {
+                        shouldReact();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }} }
 
             @Override
             public void onEvent(int i, Bundle bundle) {
@@ -175,11 +209,81 @@ public class gamePage extends AppCompatActivity {
         });
     }
 
+    private void showAlertDialog() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(gamePage.this);
+        alertDialog.setTitle("לבחור מילה");
+        String[] items = {"בוא","הב","שב"};
+        int checkedItem = 1;
+        alertDialog.setNegativeButton("בחרתי",
+                new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        Toast.makeText(gamePage.this,"מעולה, בואו נתחיל!", Toast.LENGTH_SHORT).show();
+                        dialog.cancel();
+                    }
+                });
+        alertDialog.setSingleChoiceItems(items, checkedItem, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        chosenWord = items[0];
+                        break;
+                    case 1:
+                        chosenWord = items[1];
+                        break;
+                    case 2:
+                        chosenWord = items[2];
+                        break;
+                }
+            }
+        });
+        AlertDialog alert = alertDialog.create();
+        alert.setCanceledOnTouchOutside(false);
+        alert.show();
+    }
+
+
+    private void shouldReact() throws InterruptedException {
+
+        changeColor();
+        new Thread(new Runnable() {
+            public void run() {
+                while (true) {
+                    try {
+                        Thread.sleep(3000);
+                    }
+                    catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    returnColor();
+                }
+            }
+        }).start();
+    }
+
+    private void returnColor() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                RelativeLayout bgElement = (RelativeLayout) findViewById(R.id.game);
+                bgElement.setBackgroundColor(Color.WHITE);
+            }
+        });
+    }
+
+
+    private void changeColor() {
+        RelativeLayout bgElement = (RelativeLayout) findViewById(R.id.game);
+        bgElement.setBackgroundColor(Color.BLUE);
+    }
 
 
     @Override
     protected void onStart(){
         super.onStart();
+        speechRecognizer.stopListening();
 
         is_on = false;
         micButton.setImageResource(R.drawable.ic_baseline_mic_off_24);
@@ -190,7 +294,8 @@ public class gamePage extends AppCompatActivity {
             public void onClick(View view) {
                 if (is_on == true){
                     micButton.setImageResource(R.drawable.ic_baseline_mic_off_24);
-//                    speechRecognizer.stopListening();
+                    speechRecognizer.stopListening();
+                    onStop();
                     editText.setHint("Tap to Speak...");
                     speechRecognizer.cancel();
                     try {
