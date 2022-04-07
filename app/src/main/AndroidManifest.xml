@@ -39,7 +39,7 @@
             android:name=".Bluetooth2Led"
             android:exported="false" />
         <activity
-            android:name=".avgSoundLevel"
+            android:name=".MainActivity"
             android:exported="false">
 
         </activity>

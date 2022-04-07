@@ -6,9 +6,8 @@ xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:orientation="horizontal"
-tools:context=".voiceEditor.MainActivity">
+tools:context=".MainActivity">
 
-<!--Heading Text View-->
     <TextView
         android:id="@+id/txthead"
         android:layout_width="match_parent"
@@ -19,45 +18,23 @@ tools:context=".voiceEditor.MainActivity">
         android:textColor="@color/black"
         android:textSize="70sp" />
 
-<!--This will display the status of our app when
-    we will record some audio and play that audio-->
-<TextView
-    android:id="@+id/idTVstatus"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="150dp"
-    android:text="@string/status"
-    android:textAlignment="center"
-    android:textSize="70sp" />
 
-<!--Linear Layout for adding textviews
-    in horizontal manner-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="30dp"
-        android:orientation="horizontal"
-        android:weightSum="4">
+    <Button
+        android:id="@+id/btnStatusRecord"
+        android:layout_width="395dp"
+        android:layout_height="118dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="271dp"
+        android:layout_weight="1"
+        android:background="@color/purple_500"
+        android:padding="5dp"
+        android:text="@string/status_recording"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        app:drawableTopCompat="@drawable/ic_baseline_mic_24" />
 
-        <!--Textview to start audio recording
-        drawableTop will add above mic image-->
-        <Button
-            android:id="@+id/btnRecord"
-            android:layout_width="787dp"
-            android:layout_height="508dp"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:background="@color/purple_500"
-            android:padding="5dp"
-            android:text="@string/status_recording"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="50dp"
-            app:drawableTopCompat="@drawable/ic_baseline_mic_24" />
+    <!--Textview to stop audio recording
+    drawableTop will add above mic image-->
 
-        <!--Textview to stop audio recording
-        drawableTop will add above mic image-->
-
-    </LinearLayout>
 </RelativeLayout>

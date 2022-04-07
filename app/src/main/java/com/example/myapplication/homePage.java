@@ -7,8 +7,6 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.myapplication.voiceEditor.MainActivity;
-
 public class homePage extends AppCompatActivity {
 
     @Override
@@ -19,7 +17,7 @@ public class homePage extends AppCompatActivity {
         Button startBtn = (Button)findViewById(R.id.btnStart);
         Button settingsBtn = (Button)findViewById(R.id.btnSettings);
         Button BluetoothBtn = (Button)findViewById(R.id.btnBluetooth);
-        Button RecordBtn = (Button)findViewById(R.id.btnRecorder);
+        Button RecordBtn = (Button)findViewById(R.id.btnAvg);
 
 
         startBtn.setOnClickListener(new View.OnClickListener() {

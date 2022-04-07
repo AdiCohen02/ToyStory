@@ -1,4 +1,4 @@
-package com.example.myapplication.voiceEditor;
+package com.example.myapplication;
 
 import static com.example.myapplication.gamePage.RecordAudioRequestCode;
 
@@ -6,6 +6,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -14,7 +15,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.myapplication.R;
+import com.example.myapplication.voiceEditor.AudioDataReceivedListener;
+import com.example.myapplication.voiceEditor.PlaybackThread;
+import com.example.myapplication.voiceEditor.RecordingThread;
 
 import org.apache.commons.io.IOUtils;
 
@@ -26,6 +29,7 @@ import java.nio.ShortBuffer;
 
 
 public class MainActivity extends AppCompatActivity {
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private RecordingThread mRecordingThread;
     private PlaybackThread mPlaybackThread;
     private static final int REQUEST_RECORD_AUDIO = 13;
@@ -38,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.avg_sound_level);
-        recordBtn = findViewById(R.id.btnRecord);
+        recordBtn = findViewById(R.id.btnStatusRecord);
 
         mRecordingThread = new RecordingThread(new AudioDataReceivedListener() {
             @Override
@@ -51,8 +55,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (!mRecordingThread.recording()) {
                     startAudioRecordingSafe();
+                    recordBtn.setText("RECORDING");
                 } else {
                     mRecordingThread.stopRecording();
+                    recordBtn.setText("STOPPED");
                 }
             }
         });
@@ -64,16 +70,21 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         startAudioRecordingSafe();
         try {
-            mainLoop();
+            short [] ret = getAudioSample();
         } catch (IOException e) {
             e.printStackTrace();
         }
+//        try {
+//            mainLoop();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
-    protected void mainLoop() throws IOException {
-        // the main loop of the data analyst.
-        float x_duriation = X_SEC;
-        float y_duriation = Y_SEC;
+//    protected void mainLoop() throws IOException {
+//        // the main loop of the data analyst.
+//        float x_duriation = X_SEC;
+//        float y_duriation = Y_SEC;
 //        while (shouldKeepGoing()) {
 //            float x_avg = calcAvgSound(x_duriation);
 //            float y_avg = calcAvgSound(y_duriation);
@@ -81,8 +92,8 @@ public class MainActivity extends AppCompatActivity {
 //            if (passedThreshold){
 //                reaction();
 //            }
-        short [] ret = getAudioSample();
-        }
+//        short [] ret = getAudioSample();
+//        }
 
 
     protected void reaction(){
@@ -117,7 +128,9 @@ public class MainActivity extends AppCompatActivity {
 
     private short[] getAudioSample() throws IOException {
         // should return an array of the samples
+        Log.v(LOG_TAG, "IN GET AUDIO SAMPLE");
         InputStream is = getResources().openRawResource(R.raw.jinglebells);
+        //todo: get audio sample.
         byte[] data;
         try {
             data = IOUtils.toByteArray(is);
@@ -130,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
         ShortBuffer sb = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer();
         short[] samples = new short[sb.limit()];
         sb.get(samples);
-        System.out.println("1111:" + samples);;
+        Log.v(LOG_TAG, String.valueOf(samples));
         return samples;
     }
 
@@ -184,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    }
+}
 
 
 

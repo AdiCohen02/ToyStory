@@ -73,10 +73,10 @@
         app:layout_constraintVertical_bias="0.26" />
 
     <Button
-        android:id="@+id/btnRecorder"
+        android:id="@+id/btnAvg"
         android:layout_width="130dp"
         android:layout_height="67dp"
-        android:text="להקלטה"
+        android:text="לזיהוי פשוט"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="@id/cutedog"
         app:layout_constraintEnd_toEndOf="parent"

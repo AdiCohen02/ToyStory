@@ -5,7 +5,6 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -267,16 +265,16 @@ public class gamePage extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                RelativeLayout bgElement = (RelativeLayout) findViewById(R.id.game);
-                bgElement.setBackgroundColor(Color.WHITE);
+//                RelativeLayout bgElement = (RelativeLayout) findViewById(R.id.game);
+//                bgElement.setBackgroundColor(Color.WHITE);
             }
         });
     }
 
 
     private void changeColor() {
-        RelativeLayout bgElement = (RelativeLayout) findViewById(R.id.game);
-        bgElement.setBackgroundColor(Color.BLUE);
+//        RelativeLayout bgElement = (RelativeLayout) findViewById(R.id.game);
+//        bgElement.setBackgroundColor(Color.BLUE);
     }
 
 
