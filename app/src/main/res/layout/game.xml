@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".gamePage"
-    android:id="@+id/activity"
+    android:id="@+id/game"
     android:orientation="vertical">
 
     <TextView
@@ -30,6 +30,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:text="⌂" />
+
+    <Button
+        android:id="@+id/chooseWordBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="145dp"
+        android:text="לבחור מילה" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -61,16 +69,6 @@
 
     </RelativeLayout>
 
-    <com.example.myapplication.voiceEditor.WaveformView
-        android:id="@+id/rawDataView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="7dp"
-        android:layout_marginRight="-7dp"
-        android:layout_marginBottom="244dp">
 
-    </com.example.myapplication.voiceEditor.WaveformView>
 
 </RelativeLayout>
