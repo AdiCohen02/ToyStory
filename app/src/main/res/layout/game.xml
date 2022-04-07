@@ -3,6 +3,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".gamePage"
+    android:background="#D498EA"
     android:id="@+id/game"
     android:orientation="vertical">
 
@@ -21,7 +22,9 @@
         android:id="@+id/helpBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:layout_alignParentLeft="true"
+        android:background="#B149D6"
         android:text="להפעלה \nאוטמאטית" />
 
     <Button
