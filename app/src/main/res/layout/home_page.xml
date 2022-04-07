@@ -27,8 +27,11 @@
         android:src="@drawable/dogiff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.449" />
+
 
     <Button
         android:id="@+id/btnStart"
@@ -38,12 +41,10 @@
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.197"
+        app:layout_constraintStart_toEndOf="@+id/btnRecorder"
         app:layout_constraintTop_toTopOf="@+id/imagelogo"
         app:layout_constraintVertical_bias="0.668" />
-
-
 
     <Button
         android:id="@+id/btnSettings"
@@ -53,10 +54,36 @@
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="@id/cutedog"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.197"
+        app:layout_constraintStart_toEndOf="@+id/btnBluetooth"
+        app:layout_constraintTop_toTopOf="@id/btnStart"
+        app:layout_constraintVertical_bias="0.26" />
+
+    <Button
+        android:id="@+id/btnBluetooth"
+        android:layout_width="130dp"
+        android:layout_height="67dp"
+        android:text="בלוטוס"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/cutedog"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.249"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/btnStart"
-        app:layout_constraintVertical_bias="0.259" />
+        app:layout_constraintVertical_bias="0.26" />
+
+    <Button
+        android:id="@+id/btnRecorder"
+        android:layout_width="130dp"
+        android:layout_height="67dp"
+        android:text="להקלטה"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/cutedog"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.249"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btnStart"
+        app:layout_constraintVertical_bias="0.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

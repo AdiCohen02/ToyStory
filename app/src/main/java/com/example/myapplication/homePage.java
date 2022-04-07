@@ -16,12 +16,14 @@ public class homePage extends AppCompatActivity {
 
         Button startBtn = (Button)findViewById(R.id.btnStart);
         Button settingsBtn = (Button)findViewById(R.id.btnSettings);
+        Button BluetoothBtn = (Button)findViewById(R.id.btnBluetooth);
+        Button RecordBtn = (Button)findViewById(R.id.btnRecorder);
 
 
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(homePage.this, avgSoundLevel.class));
+                startActivity(new Intent(homePage.this, gamePage.class));
             }
         });
 
@@ -29,6 +31,20 @@ public class homePage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(homePage.this, settingsPage.class));
+            }
+        });
+
+        BluetoothBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(homePage.this, Bluetooth2Led.class));
+            }
+        });
+
+        RecordBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(homePage.this, avgSoundLevel.class));
             }
         });
 
