@@ -6,18 +6,18 @@ xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:orientation="horizontal"
-tools:context=".avgSoundLevel">
+tools:context=".voiceEditor.MainActivity">
 
 <!--Heading Text View-->
-<TextView
-    android:id="@+id/txthead"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_centerHorizontal="true"
-    android:text="@string/audio_recorder"
-    android:textAlignment="center"
-    android:textColor="@color/black"
-    android:textSize="30sp" />
+    <TextView
+        android:id="@+id/txthead"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/audio_recorder"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="70sp" />
 
 <!--This will display the status of our app when
     we will record some audio and play that audio-->
@@ -28,7 +28,7 @@ tools:context=".avgSoundLevel">
     android:layout_marginTop="150dp"
     android:text="@string/status"
     android:textAlignment="center"
-    android:textSize="18sp" />
+    android:textSize="70sp" />
 
 <!--Linear Layout for adding textviews
     in horizontal manner-->
@@ -42,64 +42,22 @@ tools:context=".avgSoundLevel">
 
         <!--Textview to start audio recording
         drawableTop will add above mic image-->
-        <TextView
+        <Button
             android:id="@+id/btnRecord"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="787dp"
+            android:layout_height="508dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:background="@color/purple_500"
             android:padding="5dp"
-            android:text="@string/start_recording"
+            android:text="@string/status_recording"
             android:textAlignment="center"
             android:textColor="@color/white"
+            android:textSize="50dp"
             app:drawableTopCompat="@drawable/ic_baseline_mic_24" />
 
         <!--Textview to stop audio recording
         drawableTop will add above mic image-->
-        <TextView
-            android:id="@+id/btnStop"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:background="@color/purple_500"
-            android:padding="5dp"
-            android:text="@string/stop_recording"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            app:drawableTopCompat="@drawable/ic_baseline_mic_off_24" />
-
-        <!--Textview to play audio that is recorded
-        drawableTop will add above mic image-->
-        <TextView
-            android:id="@+id/btnPlay"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:background="@color/purple_500"
-            android:padding="5dp"
-            android:text="@string/play_recording"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            app:drawableTopCompat="@drawable/ic_baseline_mic_24" />
-
-        <!--Textview to pause the play of audio recording
-        drawableTop will add above mic image-->
-        <TextView
-            android:id="@+id/btnStopPlay"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:background="@color/purple_500"
-            android:lines="2"
-            android:padding="5dp"
-            android:text="@string/stop_playing"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            app:drawableTopCompat="@drawable/ic_baseline_mic_off_24" />
 
     </LinearLayout>
 </RelativeLayout>

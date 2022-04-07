@@ -7,6 +7,8 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapplication.voiceEditor.MainActivity;
+
 public class homePage extends AppCompatActivity {
 
     @Override
@@ -44,7 +46,7 @@ public class homePage extends AppCompatActivity {
         RecordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(homePage.this, avgSoundLevel.class));
+                startActivity(new Intent(homePage.this, MainActivity.class));
             }
         });
 
