@@ -36,10 +36,10 @@
             android:name=".helper"
             android:exported="false" />
         <activity
-            android:name=".Bluetooth2Led"
+            android:name=".arduino2Bluetooth.Bluetooth2Led"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".voiceEditor.ThresholdAnalizeMain"
             android:exported="false">
 
         </activity>

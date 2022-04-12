@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.voiceEditor;
 
 import static com.example.myapplication.gamePage.RecordAudioRequestCode;
 
@@ -15,9 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.myapplication.voiceEditor.AudioDataReceivedListener;
-import com.example.myapplication.voiceEditor.PlaybackThread;
-import com.example.myapplication.voiceEditor.RecordingThread;
+import com.example.myapplication.R;
 
 import org.apache.commons.io.IOUtils;
 
@@ -28,8 +26,8 @@ import java.nio.ByteOrder;
 import java.nio.ShortBuffer;
 
 
-public class MainActivity extends AppCompatActivity {
-    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+public class ThresholdAnalizeMain extends AppCompatActivity {
+    private static final String LOG_TAG = ThresholdAnalizeMain.class.getSimpleName();
     private RecordingThread mRecordingThread;
     private PlaybackThread mPlaybackThread;
     private static final int REQUEST_RECORD_AUDIO = 13;
@@ -178,11 +176,11 @@ public class MainActivity extends AppCompatActivity {
     private void requestMicrophonePermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.RECORD_AUDIO)) {
             // Show dialog explaining why we need record audio
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+            ActivityCompat.requestPermissions(ThresholdAnalizeMain.this, new String[]{
                             android.Manifest.permission.RECORD_AUDIO}, REQUEST_RECORD_AUDIO);
                 }
         else {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+            ActivityCompat.requestPermissions(ThresholdAnalizeMain.this, new String[]{
                     android.Manifest.permission.RECORD_AUDIO}, REQUEST_RECORD_AUDIO);
         }
     }

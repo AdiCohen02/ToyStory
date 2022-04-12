@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.arduino2Bluetooth;
 
 
 
@@ -27,6 +27,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.example.myapplication.R;
 
 import java.io.IOException;
 import java.io.InputStream;
