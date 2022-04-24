@@ -17,7 +17,7 @@
         <TextView
             android:id="@+id/bluetooth_state"
             android:layout_width="343dp"
-            android:layout_height="224dp"
+            android:layout_height="72dp"
             android:layout_weight="0.5"
             android:gravity="center"
             android:text="BBBB"
@@ -26,7 +26,7 @@
         <TextView
             android:id="@+id/bluetooth_paired"
             android:layout_width="343dp"
-            android:layout_height="194dp"
+            android:layout_height="42dp"
             android:layout_weight="0.5"
             android:gravity="center"
             android:text="AAAA"
@@ -43,7 +43,9 @@
         <ListView
             android:layout_width="match_parent"
             android:id="@+id/mylist"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:textColor="@color/purple_700"
+            android:textSize="5sp">
         </ListView>
 
 
@@ -57,29 +59,21 @@
         android:orientation="horizontal"
         android:padding="10dp"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="-16dp"
-        tools:layout_editor_absoluteY="474dp">
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="645dp">
 
         <Button
             android:id="@+id/buttonlightup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="LIGHT UP"
-            android:textSize="30sp"
-            />
+            android:textSize="30sp" />
 
         <Button
             android:id="@+id/buttonShut"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="TURN OFF"
-            android:textSize="30sp" />
-
-        <Button
-            android:id="@+id/buttondisconnect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="DISCONNECT"
             android:textSize="30sp" />
 
     </LinearLayout>

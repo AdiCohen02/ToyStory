@@ -56,6 +56,8 @@ public class gamePage extends AppCompatActivity {
         // permissiom is handled
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game);
+
+        System.out.println("1111: hi");
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             checkPermission();
         }
