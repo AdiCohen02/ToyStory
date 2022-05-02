@@ -12,6 +12,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +30,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.myapplication.R;
+import com.example.myapplication.gamePage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
 
-public class Bluetooth2Led extends Activity {
+public class SettingsAndBluetooth extends Activity {
     private static final int REQUEST_ENABLE_BT = 88;
     TextView bluetoothstatus, bluetoothPaired;
     Button enableLedButton, btnshut;
@@ -52,11 +55,18 @@ public class Bluetooth2Led extends Activity {
     BluetoothSocket blsocket = null;
     ListView listt;
     private int MY_PERMISSIONS_REQUEST_CODE = 123;
+    private Switch toyswitch;
+    private Button startBtn2;
+
+    public static final String PREFERENCES = "preferences";
+    public static final String TOY_SWITCH = "switch";
+
+    private boolean savedswitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.bluetooth_tryments);
+        setContentView(R.layout.settings_and_bluetooth);
 
         bluetoothstatus = (TextView) findViewById(R.id.bluetooth_state);
         bluetoothPaired = (TextView) findViewById(R.id.bluetooth_paired);
@@ -69,12 +79,28 @@ public class Bluetooth2Led extends Activity {
         adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.listitem, R.id.txtlist, devicesList);
         listt.setAdapter(adapter);
 
+        toyswitch = (Switch) findViewById(R.id.switchToyBtn);
+        startBtn2 = findViewById(R.id.startBtn2);
+
+        loadData();
+        updateViews();
+
         btnshut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (blsocket != null && blsocket.isConnected()) {
                     send2Bluetooth(48);
                 }
+            }
+        });
+
+        startBtn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveData();
+                Intent intent1 = new Intent(SettingsAndBluetooth.this, gamePage.class);
+                intent1.putExtra("toyexist", toyswitch.getShowText());
+                startActivity(intent1);
             }
         });
 
@@ -221,6 +247,22 @@ public class Bluetooth2Led extends Activity {
                 System.out.println("1111: Could not open a output stream");
             }
         }
+    }
+
+    public void saveData() {
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(TOY_SWITCH, toyswitch.isChecked());
+        editor.apply();
+    }
+
+    public void loadData() {
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
+        savedswitch = sharedPreferences.getBoolean(TOY_SWITCH, false);
+    }
+
+    public void updateViews() {
+        toyswitch.setChecked(savedswitch);
     }
 
     @Override

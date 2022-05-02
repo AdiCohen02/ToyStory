@@ -19,6 +19,7 @@
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="-7dp" />
 
+
     <ImageView
         android:id="@+id/cutedog"
         android:layout_width="377dp"
@@ -30,8 +31,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.449" />
-
+        app:layout_constraintVertical_bias="0.589" />
 
     <Button
         android:id="@+id/btnStart"
@@ -40,50 +40,23 @@
         android:text="התחל"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.197"
-        app:layout_constraintStart_toEndOf="@+id/btnRecorder"
+        app:layout_constraintEnd_toEndOf="@+id/btnBluetooth"
+        app:layout_constraintStart_toStartOf="@+id/btnBluetooth"
         app:layout_constraintTop_toTopOf="@+id/imagelogo"
-        app:layout_constraintVertical_bias="0.668" />
+        app:layout_constraintVertical_bias="0.65" />
 
     <Button
-        android:id="@+id/btnSettings"
+        android:id="@+id/btnBluetooth"
         android:layout_width="130dp"
         android:layout_height="67dp"
         android:text="הגדרות"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="@id/cutedog"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.197"
-        app:layout_constraintStart_toEndOf="@+id/btnBluetooth"
-        app:layout_constraintTop_toTopOf="@id/btnStart"
-        app:layout_constraintVertical_bias="0.26" />
-
-    <Button
-        android:id="@+id/btnBluetooth"
-        android:layout_width="130dp"
-        android:layout_height="67dp"
-        android:text="בלוטוס"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="@id/cutedog"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.249"
+        app:layout_constraintHorizontal_bias="0.444"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/btnStart"
-        app:layout_constraintVertical_bias="0.26" />
-
-    <Button
-        android:id="@+id/btnAvg"
-        android:layout_width="130dp"
-        android:layout_height="67dp"
-        android:text="לזיהוי פשוט"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="@id/cutedog"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.249"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/btnStart"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.226" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

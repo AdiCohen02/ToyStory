@@ -16,7 +16,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo"
         android:label="צעצוע של דיבור"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -44,7 +44,7 @@
             android:name=".helper"
             android:exported="false" />
         <activity
-            android:name=".arduino2Bluetooth.Bluetooth2Led"
+            android:name=".arduino2Bluetooth.SettingsAndBluetooth"
             android:exported="false" />
         <activity
             android:name=".voiceEditor.ThresholdAnalizeMain"

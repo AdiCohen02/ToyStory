@@ -161,11 +161,12 @@ public class ThresholdAnalizeMain extends AppCompatActivity {
 //
 //    }
 
-//    private Boolean passedThreshold(float x_seconds_avg, float y_seconds_avg, float threshold){
-//        // x > y
-//        // if y_seconds_avg/x_seconds_avg >= thershold - means we passed the needed threshold
-//        // and we should return true, and the reaction will start. returns False otherwise.
-//    }
+    private Boolean passedThreshold(float x_seconds_avg, float y_seconds_avg, float threshold){
+        // x > y
+        // if y_seconds_avg/x_seconds_avg >= thershold - means we passed the needed threshold
+        // and we should return true, and the reaction will start. returns False otherwise.
+        return true;
+    }
 
     private void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

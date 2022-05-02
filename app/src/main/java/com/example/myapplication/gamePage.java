@@ -2,10 +2,12 @@ package com.example.myapplication;
 
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
@@ -14,6 +16,7 @@ import android.speech.SpeechRecognizer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -39,14 +42,16 @@ public class gamePage extends AppCompatActivity {
     private EditText editText;
     private ImageView micButton;
     private Button getHomeBtn;
-    private Button helpBtn;
+    private Button recognizeSettingBtn;
     private boolean is_on;
     private WaveformView mRealtimeWaveformView;
     private RecordingThread mRecordingThread;
     private PlaybackThread mPlaybackThread;
     private static final int REQUEST_RECORD_AUDIO = 13;
     public String chosenWord = "";
+    public int recStatus = 0; // 0 -  אך ורק זיהוי דיבור, 1 - זיהוי סף וזיהוי דיבור.
     private Button chooseWordBtn;
+    ImageButton playRecord;
 
 
     @Override
@@ -65,13 +70,23 @@ public class gamePage extends AppCompatActivity {
         editText = findViewById(R.id.text);
         micButton = findViewById(R.id.button);
         getHomeBtn = findViewById(R.id.getBackHomeBtn);
-        helpBtn = findViewById(R.id.helpBtn);
+        recognizeSettingBtn = findViewById(R.id.recognizeSettingBtn);
         chooseWordBtn = findViewById(R.id.chooseWordBtn);
+        playRecord = findViewById(R.id.playRecord);
+
+        final MediaPlayer mp = MediaPlayer.create(this, R.raw.bark);
+        playRecord.setOnClickListener(new View.OnClickListener(){
+
+            public void onClick(View v) {
+                mp.start();
+            }
+        });
+
 
         chooseWordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showAlertDialog();
+                showRecSettingsDialog();
             }
         });
 
@@ -81,25 +96,32 @@ public class gamePage extends AppCompatActivity {
                 startActivity(new Intent(gamePage.this, homePage.class));
             }
         });
-        helpBtn.setOnClickListener(new View.OnClickListener() {
+        recognizeSettingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v){
-                startActivity(new Intent(gamePage.this, helper.class));
+                showRecSettingsDialog();
             }
         });
+        try {
+            // creating speech recognition object
+            speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
 
-        // creating speech recognition object
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
-        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            // all of these to make sure hebrew is added
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "he");
+            speechRecognizerIntent.putExtra("android.speech.extra.EXTRA_ADDITIONAL_LANGUAGES", new String[]{"he"});
 
-        // all of these to make sure hebrew is added
-        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "he");
-        speechRecognizerIntent.putExtra("android.speech.extra.EXTRA_ADDITIONAL_LANGUAGES", new String[]{"he"});
-
-        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
+            System.out.println("1111: created speechRecognizerIntent");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("1111: error");
+        }
 
         speechRecognizer.setRecognitionListener(new RecognitionListener() {
+            private Context context = null;
+
             @Override
             public void onReadyForSpeech(Bundle bundle) {
 
@@ -114,10 +136,12 @@ public class gamePage extends AppCompatActivity {
             @Override
             public void onRmsChanged(float v) {
                 editText.setHint("onRmsChanged...");
+
             }
 
             @Override
             public void onBufferReceived(byte[] bytes) {
+                System.out.println("1111: onBufferReceived");
                 editText.setHint("onBufferReceived...");
             }
 
@@ -126,44 +150,47 @@ public class gamePage extends AppCompatActivity {
                 editText.setHint("onEndOfSpeech...");
             }
 
-//            @Override
-//            public void onError(int i) {
-//
-//            }
-
             @Override
             public void onError(int error) {
+                System.out.println("1111: on error");
                 String mError = "";
                 switch (error) {
                     case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
                         editText.setHint("network timeout");
-//                        speechRecognizer.startListening(speechRecognizerIntent);
+                        System.out.println("1111: on error network timeout");
                         break;
                     case SpeechRecognizer.ERROR_NETWORK:
                         editText.setHint("network, Please check data bundle or network settings");
+                        System.out.println("1111: network, Please check data bundle or network settings");
                         return;
                     case SpeechRecognizer.ERROR_AUDIO:
                         editText.setHint("ERROR_AUDIO");
+                        System.out.println("1111: ERROR_AUDIO");
                         return;
                     case SpeechRecognizer.ERROR_SERVER:
-                        mError = " server";
-//                        speechRecognizer.startListening(speechRecognizerIntent);
+                        mError = "server";
+                        System.out.println("1111:" +mError);
                         break;
                     case SpeechRecognizer.ERROR_CLIENT:
                         mError = " client";
+                        System.out.println("1111:" +mError);
                         break;
                     case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
                         mError = " speech time out" ;
+                        System.out.println("1111:" +mError);
                         break;
                     case SpeechRecognizer.ERROR_NO_MATCH:
                         mError = " no match" ;
+                        System.out.println("1111:" +mError);
                         speechRecognizer.startListening(speechRecognizerIntent);
                         break;
                     case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
                         mError = " recogniser busy" ;
+                        System.out.println("1111:" +mError);
                         break;
                     case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
                         mError = " insufficient permissions" ;
+                        System.out.println("1111:" +mError);
                         break;
                 }
             }
@@ -192,6 +219,22 @@ public class gamePage extends AppCompatActivity {
 
             }
 
+//            @Override
+//            public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//                // the resulting text is in the getExtras:
+//                Bundle bundle = data.getExtras();
+//                ArrayList<String> matches = bundle.getStringArrayList(RecognizerIntent.EXTRA_RESULTS);
+//                // the recording url is in getData:
+//                Uri audioUri = data.getData();
+//                ContentResolver contentResolver = getContentResolver();
+//                try {
+//                    InputStream filestream = contentResolver.openInputStream(audioUri);
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//                // TODO: read audio file from inputstream
+//            }
+
             @Override
             public void onPartialResults(Bundle partialResults) {
                 ArrayList data = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
@@ -211,7 +254,7 @@ public class gamePage extends AppCompatActivity {
         });
     }
 
-    private void showAlertDialog() {
+    private void showChooseWordDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(gamePage.this);
         alertDialog.setTitle("לבחור מילה");
         String[] items = {"בוא","הב","שב"};
@@ -246,21 +289,70 @@ public class gamePage extends AppCompatActivity {
         alert.show();
     }
 
+    private void showRecSettingsDialog() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(gamePage.this);
+        alertDialog.setTitle("בחר הגדרות זיהוי");
+        String[] items = {"זיהוי דיבור","זיהוי סף"};
+        int checkedItem = 1;
+        alertDialog.setNegativeButton("בחרתי",
+                new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        Toast.makeText(gamePage.this,"מעולה, בואו נתחיל!", Toast.LENGTH_SHORT).show();
+                        dialog.cancel();
+                    }
+                });
+        alertDialog.setSingleChoiceItems(items, checkedItem, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                recStatus = which;
+            }
+        });
+        AlertDialog alert = alertDialog.create();
+        alert.setCanceledOnTouchOutside(false);
+        alert.show();
+    }
+
+//    private void showRecSettingsDialog() {
+//        AlertDialog.Builder alertDialogSettings = new AlertDialog.Builder(gamePage.this);
+//        alertDialogSettings.setTitle("בחר אופציה לזיהוי");
+//        String[] items = {"זיהוי דיבור","זיהוי סף קול"};
+//        int checkedItem = 1;
+//        alertDialogSettings.setNegativeButton("",
+//                new DialogInterface.OnClickListener()
+//                {
+//                    public void onClick(DialogInterface dialog, int id)
+//                    {
+//                        Toast.makeText(gamePage.this,"מעולה, בואו נתחיל!", Toast.LENGTH_SHORT).show();
+//                        dialog.cancel();
+//                    }
+//                });
+//        alertDialogSettings.setSingleChoiceItems(items, checkedItem, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                recStatus = which;
+//
+//                }
+//            }
+//        });
+//        AlertDialog alert = alertDialogSettings.create();
+//        alert.alertDialogSettings(false);
+//        alert.alertDialogSettings();
+//    }
+
 
     private void shouldReact() throws InterruptedException {
 
         changeColor();
         new Thread(new Runnable() {
             public void run() {
-                while (true) {
-                    try {
-                        Thread.sleep(3000);
-                    }
-                    catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    returnColor();
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+                returnColor();
             }
         }).start();
     }
