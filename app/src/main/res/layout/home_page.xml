@@ -35,28 +35,42 @@
 
     <Button
         android:id="@+id/btnStart"
-        android:layout_width="130dp"
-        android:layout_height="67dp"
-        android:text="התחל"
-        android:textSize="20dp"
+        android:layout_width="158dp"
+        android:layout_height="64dp"
+        android:text="לזיהוי דיבור"
+        android:textSize="17dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/btnBluetooth"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/btnBluetooth"
         app:layout_constraintTop_toTopOf="@+id/imagelogo"
-        app:layout_constraintVertical_bias="0.65" />
+        app:layout_constraintVertical_bias="0.632" />
+
+    <Button
+        android:id="@+id/btnSimple"
+        android:layout_width="158dp"
+        android:layout_height="64dp"
+        android:text="לזיהוי סף"
+        android:textSize="17dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/btnBluetooth"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/btnBluetooth"
+        app:layout_constraintTop_toTopOf="@+id/imagelogo"
+        app:layout_constraintVertical_bias="0.856" />
 
     <Button
         android:id="@+id/btnBluetooth"
-        android:layout_width="130dp"
-        android:layout_height="67dp"
-        android:text="הגדרות"
-        android:textSize="20dp"
+        android:layout_width="158dp"
+        android:layout_height="64dp"
+        android:text="להגדרות בלוטוס ובובה"
+        android:textSize="17dp"
         app:layout_constraintBottom_toBottomOf="@id/cutedog"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.444"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/btnStart"
-        app:layout_constraintVertical_bias="0.226" />
+        app:layout_constraintVertical_bias="0.225" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

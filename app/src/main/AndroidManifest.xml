@@ -41,6 +41,10 @@
             android:label="הגדרות"
             android:exported="false" />
         <activity
+            android:name=".voiceEditor.MainActivity"
+            android:label="זיהוי פשוט"
+            android:exported="false" />
+        <activity
             android:name=".helper"
             android:exported="false" />
         <activity

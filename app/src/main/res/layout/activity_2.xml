@@ -20,7 +20,7 @@
 
     <Button
         android:layout_width="wrap_content"
-        android:id="@+id/start_recording"
+        android:id="@+id/start_recording1"
         android:layout_height="wrap_content"
         android:text="להתחיל הקלטה"
         android:textSize="30dp"
@@ -31,10 +31,10 @@
         app:layout_constraintVertical_bias="0.283"/>\
 
     <Button
-        android:id="@+id/stop_recording"
+        android:id="@+id/silenceVol"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="לסיים הקלטה"
+        android:text="לחץ ושמור על השקט למשך 3 שניות"
         android:textSize="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,10 +43,10 @@
         app:layout_constraintVertical_bias="0.439" />
 
     <Button
-        android:id="@+id/play_recording"
+        android:id="@+id/threshold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="לחץ לשמיעת הקלטה"
+        android:text="לחץ ותשמיע 'AAA' למשך 3 שניות"
         android:textSize="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
