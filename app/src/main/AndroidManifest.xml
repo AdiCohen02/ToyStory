@@ -37,10 +37,6 @@
             android:label="צעצוע של דיבור"
             android:exported="false" />
         <activity
-            android:name=".settingsPage"
-            android:label="הגדרות"
-            android:exported="false" />
-        <activity
             android:name=".voiceEditor.MainActivity"
             android:label="זיהוי פשוט"
             android:exported="false" />
@@ -50,11 +46,6 @@
         <activity
             android:name=".arduino2Bluetooth.SettingsAndBluetooth"
             android:exported="false" />
-        <activity
-            android:name=".voiceEditor.ThresholdAnalizeMain"
-            android:exported="false">
-
-        </activity>
 
     </application>
 

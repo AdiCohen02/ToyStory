@@ -27,8 +27,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.myapplication.voiceEditor.PlaybackThread;
-import com.example.myapplication.voiceEditor.RecordingThread;
 import com.newventuresoftware.waveform.WaveformView;
 
 import java.util.ArrayList;
@@ -45,8 +43,6 @@ public class gamePage extends AppCompatActivity {
     private Button recognizeSettingBtn;
     private boolean is_on;
     private WaveformView mRealtimeWaveformView;
-    private RecordingThread mRecordingThread;
-    private PlaybackThread mPlaybackThread;
     private static final int REQUEST_RECORD_AUDIO = 13;
     public String chosenWord = "";
     public int recStatus = 0; // 0 -  אך ורק זיהוי דיבור, 1 - זיהוי סף וזיהוי דיבור.
@@ -257,7 +253,7 @@ public class gamePage extends AppCompatActivity {
     private void showChooseWordDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(gamePage.this);
         alertDialog.setTitle("לבחור מילה");
-        String[] items = {"בוא","הב","שב"};
+        String[] items = {"בוא", "עוד","הב","שב"};
         int checkedItem = 1;
         alertDialog.setNegativeButton("בחרתי",
                 new DialogInterface.OnClickListener()
@@ -433,14 +429,14 @@ public class gamePage extends AppCompatActivity {
 
 //    final WaveformView mPlaybackView = (WaveformView) findViewById(R.id.rawDataView);
 
-    private void startAudioRecordingSafe() {
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.RECORD_AUDIO)
-                == PackageManager.PERMISSION_GRANTED) {
-            mRecordingThread.startRecording();
-        } else {
-            checkPermission();
-        }
-    }
+//    private void startAudioRecordingSafe() {
+//        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.RECORD_AUDIO)
+//                == PackageManager.PERMISSION_GRANTED) {
+//            mRecordingThread.startRecording();
+//        } else {
+//            checkPermission();
+//        }
+//    }
 
 //    private short[] getAudioSample() throws IOException{
 //        InputStream is = getResources().openRawResource(R.raw.jinglebells);
