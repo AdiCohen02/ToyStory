@@ -2,14 +2,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.myapplication">
 
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO"></uses-permission>
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE"/>
+
+     Request legacy Bluetooth permissions on older devices.
+    <uses-permission android:name="android.permission.BLUETOOTH"
+        android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"
+        android:maxSdkVersion="30" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo"
         android:label="צעצוע של דיבור"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -21,6 +28,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -29,20 +37,15 @@
             android:label="צעצוע של דיבור"
             android:exported="false" />
         <activity
-            android:name=".settingsPage"
-            android:label="הגדרות"
+            android:name=".voiceEditor.MainActivity"
+            android:label="זיהוי פשוט"
             android:exported="false" />
         <activity
             android:name=".helper"
             android:exported="false" />
         <activity
-            android:name=".Bluetooth2Led"
+            android:name=".arduino2Bluetooth.SettingsAndBluetooth"
             android:exported="false" />
-        <activity
-            android:name=".avgSoundLevel"
-            android:exported="false">
-
-        </activity>
 
     </application>
 

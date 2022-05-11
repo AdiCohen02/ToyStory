@@ -7,6 +7,9 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapplication.arduino2Bluetooth.SettingsAndBluetooth;
+import com.example.myapplication.voiceEditor.MainActivity;
+
 public class homePage extends AppCompatActivity {
 
     @Override
@@ -15,10 +18,8 @@ public class homePage extends AppCompatActivity {
         setContentView(R.layout.home_page);
 
         Button startBtn = (Button)findViewById(R.id.btnStart);
-        Button settingsBtn = (Button)findViewById(R.id.btnSettings);
         Button BluetoothBtn = (Button)findViewById(R.id.btnBluetooth);
-        Button RecordBtn = (Button)findViewById(R.id.btnRecorder);
-
+        Button voiceBtn = (Button)findViewById(R.id.btnSimple);
 
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -27,29 +28,22 @@ public class homePage extends AppCompatActivity {
             }
         });
 
-        settingsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(homePage.this, settingsPage.class));
-            }
-        });
-
         BluetoothBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(homePage.this, Bluetooth2Led.class));
+                startActivity(new Intent(homePage.this, SettingsAndBluetooth.class));
             }
         });
 
-        RecordBtn.setOnClickListener(new View.OnClickListener() {
+        voiceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(homePage.this, avgSoundLevel.class));
+                startActivity(new Intent(homePage.this, MainActivity.class));
             }
         });
 
     }
-};
+}
 
 
 
