@@ -46,13 +46,6 @@
         android:text=" הגדרות \nזיהוי קול" />
 
     <Button
-        android:id="@+id/getBackHomeBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:text="⌂" />
-
-    <Button
         android:id="@+id/chooseWordBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -60,27 +53,29 @@
         android:layout_marginRight="145dp"
         android:text="לבחור מילה" />
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_centerInParent="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_height="wrap_content">
 
-        <EditText
+        <TextView
             android:id="@+id/text"
-            android:layout_width="match_parent"
+            android:layout_width="312dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_marginRight="15dp"
             android:layout_toLeftOf="@id/button"
             android:hint="Tap to Speak"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:textColor="@color/black"
+            android:textSize="30dp" />
 
         <ImageView
             android:id="@+id/button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_marginRight="8dp"
             android:backgroundTint="#F9F8FA"
@@ -88,7 +83,7 @@
             android:src="@drawable/ic_baseline_mic_off_24" />
 
 
-    </RelativeLayout>
+    </LinearLayout>
 
 
 

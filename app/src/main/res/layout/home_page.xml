@@ -4,73 +4,81 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="@color/white"
+    android:paddingHorizontal="5dp"
+    android:paddingVertical="20dp"
     android:layout_height="match_parent"
     tools:context=".homePage">
 
-
     <ImageView
-        android:id="@+id/imagelogo"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/logo"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="-7dp" />
+        android:src="@drawable/logo"
+        app:layout_constraintBottom_toTopOf="@+id/cardPlayWith"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-
-    <ImageView
-        android:id="@+id/cutedog"
-        android:layout_width="377dp"
-        android:layout_height="344dp"
-        android:layout_marginTop="516dp"
-        android:src="@drawable/dogiff"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardPlayWithout"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_gravity="bottom"
+        android:elevation="200dp"
+        app:cardElevation="5dp"
+        app:cardBackgroundColor="#272BB575"
+        app:cardCornerRadius="30dp"
+        app:cardMaxElevation="7dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintTop_toBottomOf="@+id/cardPlayWith">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="20dp"
+            android:textColor="@color/black"
+            android:text="לשחק בלי הבובה"
+            android:textSize="35dp" />
+
+    </androidx.cardview.widget.CardView>
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardPlayWith"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="7dp"
+        app:cardBackgroundColor="#272BB575"
+        app:cardCornerRadius="30dp"
+        app:cardMaxElevation="7dp"
+        android:elevation="100dp"
+        app:cardElevation="5dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.589" />
+        app:layout_constraintVertical_bias="0.515">
 
-    <Button
-        android:id="@+id/btnStart"
-        android:layout_width="158dp"
-        android:layout_height="64dp"
-        android:text="לזיהוי דיבור"
-        android:textSize="17dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/btnBluetooth"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/btnBluetooth"
-        app:layout_constraintTop_toTopOf="@+id/imagelogo"
-        app:layout_constraintVertical_bias="0.632" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="20dp"
+            android:textColor="@color/black"
+            android:text="לשחק עם הבובה"
+            android:textSize="35dp" />
 
-    <Button
-        android:id="@+id/btnSimple"
-        android:layout_width="158dp"
-        android:layout_height="64dp"
-        android:text="לזיהוי סף"
-        android:textSize="17dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/btnBluetooth"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/btnBluetooth"
-        app:layout_constraintTop_toTopOf="@+id/imagelogo"
-        app:layout_constraintVertical_bias="0.856" />
-
-    <Button
-        android:id="@+id/btnBluetooth"
-        android:layout_width="158dp"
-        android:layout_height="64dp"
-        android:text="להגדרות בלוטוס ובובה"
-        android:textSize="17dp"
-        app:layout_constraintBottom_toBottomOf="@id/cutedog"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.444"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/btnStart"
-        app:layout_constraintVertical_bias="0.225" />
+        <ImageView
+            android:layout_width="97dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:src="@drawable/dogifff" />
+    </androidx.cardview.widget.CardView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

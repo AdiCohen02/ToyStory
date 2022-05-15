@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group android:checkableBehavior="single"/>
+    <group>
+        <item
+            android:id="@+id/home"
+            android:icon="@drawable/ic_baseline_home_24"
+            android:title="מסך הבית" />
+        <item
+            android:id="@+id/nav_avg_sound"
+            android:icon="@drawable/ic_baseline_mic_none_24"
+            app:showAsAction="collapseActionView"
+            android:title="לזיהוי פשוט" />
+
+        <item
+            android:id="@+id/nav_Bluetooth2Led"
+            android:icon="@drawable/ic_baseline_bluetooth_audio_24"
+            android:title="התחברות לbluetooth" />
+
+        <item
+            android:id="@+id/disable_bluetooth"
+            android:icon="@drawable/ic_baseline_bluetooth_disabled_24"
+            android:title="התנתקות מהbluetooth" />
+
+        <item
+            android:id="@+id/nav_info"
+            android:icon="@drawable/ic_baseline_help_outline_24"
+            app:showAsAction="ifRoom"
+            android:title="הדרכה" />
+    </group>
+
+</menu>

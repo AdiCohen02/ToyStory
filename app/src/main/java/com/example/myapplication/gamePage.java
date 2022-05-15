@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,20 +14,26 @@ import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.myapplication.arduino2Bluetooth.SettingsAndBluetooth;
 import com.newventuresoftware.waveform.WaveformView;
 
 import java.util.ArrayList;
@@ -37,9 +44,8 @@ public class gamePage extends AppCompatActivity {
     public static final Integer RecordAudioRequestCode = 1;
     private static SpeechRecognizer speechRecognizer;
     public static final Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-    private EditText editText;
+    private TextView textView;
     private ImageView micButton;
-    private Button getHomeBtn;
     private Button recognizeSettingBtn;
     private boolean is_on;
     private WaveformView mRealtimeWaveformView;
@@ -63,9 +69,8 @@ public class gamePage extends AppCompatActivity {
             checkPermission();
         }
 
-        editText = findViewById(R.id.text);
+        textView = findViewById(R.id.text);
         micButton = findViewById(R.id.button);
-        getHomeBtn = findViewById(R.id.getBackHomeBtn);
         recognizeSettingBtn = findViewById(R.id.recognizeSettingBtn);
         chooseWordBtn = findViewById(R.id.chooseWordBtn);
         playRecord = findViewById(R.id.playRecord);
@@ -86,12 +91,6 @@ public class gamePage extends AppCompatActivity {
             }
         });
 
-        getHomeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View v){
-                startActivity(new Intent(gamePage.this, homePage.class));
-            }
-        });
         recognizeSettingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v){
@@ -125,25 +124,25 @@ public class gamePage extends AppCompatActivity {
 
             @Override
             public void onBeginningOfSpeech() {
-                editText.setText("");
-                editText.setHint("Listening...");
+                textView.setText("");
+                textView.setHint("Listening...");
             }
 
             @Override
             public void onRmsChanged(float v) {
-                editText.setHint("onRmsChanged...");
+                textView.setHint("onRmsChanged...");
 
             }
 
             @Override
             public void onBufferReceived(byte[] bytes) {
                 System.out.println("1111: onBufferReceived");
-                editText.setHint("onBufferReceived...");
+                textView.setHint("onBufferReceived...");
             }
 
             @Override
             public void onEndOfSpeech() {
-                editText.setHint("onEndOfSpeech...");
+                textView.setHint("onEndOfSpeech...");
             }
 
             @Override
@@ -152,15 +151,15 @@ public class gamePage extends AppCompatActivity {
                 String mError = "";
                 switch (error) {
                     case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
-                        editText.setHint("network timeout");
+                        textView.setHint("network timeout");
                         System.out.println("1111: on error network timeout");
                         break;
                     case SpeechRecognizer.ERROR_NETWORK:
-                        editText.setHint("network, Please check data bundle or network settings");
+                        textView.setHint("network, Please check data bundle or network settings");
                         System.out.println("1111: network, Please check data bundle or network settings");
                         return;
                     case SpeechRecognizer.ERROR_AUDIO:
-                        editText.setHint("ERROR_AUDIO");
+                        textView.setHint("ERROR_AUDIO");
                         System.out.println("1111: ERROR_AUDIO");
                         return;
                     case SpeechRecognizer.ERROR_SERVER:
@@ -193,9 +192,9 @@ public class gamePage extends AppCompatActivity {
 
             @Override
             public void onResults(Bundle bundle) {
-                editText.setHint("onResults...");
+                textView.setHint("onResults...");
                 ArrayList<String> data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-                editText.setText(data.get(0));
+                textView.setText(data.get(0));
                 if (chosenWord.isEmpty()){
                     if (data.get(0).equals(chosenWord)) {
                         try {
@@ -235,7 +234,7 @@ public class gamePage extends AppCompatActivity {
             public void onPartialResults(Bundle partialResults) {
                 ArrayList data = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                 String word = (String) data.get(data.size() - 1);
-                editText.setText(word);
+                textView.setText(word);
                 if (!data.get(0).equals("")) {
                     try {
                         shouldReact();
@@ -245,7 +244,7 @@ public class gamePage extends AppCompatActivity {
 
             @Override
             public void onEvent(int i, Bundle bundle) {
-                editText.setText("onEvent");
+                textView.setText("onEvent");
             }
         });
     }
@@ -377,7 +376,7 @@ public class gamePage extends AppCompatActivity {
 
         is_on = false;
         micButton.setImageResource(R.drawable.ic_baseline_mic_off_24);
-        editText.setHint("Tap to Speak...");
+        textView.setHint("Tap to Speak...");
 
         micButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -386,7 +385,7 @@ public class gamePage extends AppCompatActivity {
                     micButton.setImageResource(R.drawable.ic_baseline_mic_off_24);
                     speechRecognizer.stopListening();
                     onStop();
-                    editText.setHint("Tap to Speak...");
+                    textView.setHint("Tap to Speak...");
                     speechRecognizer.cancel();
                     try {
                         Thread.sleep(500);
@@ -470,4 +469,49 @@ public class gamePage extends AppCompatActivity {
                 Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
         }
     }
+
+    @SuppressLint("RestrictedApi")
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater =getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        if(menu instanceof MenuBuilder){
+            MenuBuilder m = (MenuBuilder) menu;
+            m.setOptionalIconsVisible(true);
+        }
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            /*
+            case R.id.nav_avg_sound:
+                Toast.makeText(this, "לזיהוי פשוט", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, MainActivity.class));
+                return true;*/
+            case R.id.nav_Bluetooth2Led:
+                Toast.makeText(this, "התחברות לבלוטות'", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, SettingsAndBluetooth.class));
+                return true;
+            case R.id.nav_info:
+                Toast.makeText(this, "הדרכה", Toast.LENGTH_SHORT).show();
+                //startActivity(new Intent(homePage.this, info_activity.class));
+                info();
+                return true;
+            case R.id.disable_bluetooth:
+                Toast.makeText(this, "התנתקות מהבלוטות'", Toast.LENGTH_SHORT).show();
+                disableBluetooth();
+                return true;
+            case R.id.home:
+                Toast.makeText(this, "למסך הבית", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, homePage.class));
+                return true;
+            default:
+                return true;
+        } }
+    private void info() {
+    }
+    private void disableBluetooth() {
+    }
+
 }

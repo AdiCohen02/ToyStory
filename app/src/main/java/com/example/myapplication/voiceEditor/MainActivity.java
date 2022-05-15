@@ -3,7 +3,9 @@ package com.example.myapplication.voiceEditor;
 import static android.media.AudioManager.MODE_NORMAL;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.AudioFormat;
@@ -13,16 +15,23 @@ import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.core.app.ActivityCompat;
 
 import com.example.myapplication.R;
+import com.example.myapplication.arduino2Bluetooth.SettingsAndBluetooth;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         environmentSwitch = (Switch) findViewById(R.id.switchEnvironment);
 
 
-        ActivityCompat.requestPermissions(MainActivity.this,
+        ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 1);
 
@@ -268,6 +277,45 @@ public class MainActivity extends AppCompatActivity {
             mHandler.postDelayed(mPollTask, delayMillis);
         }
     };
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.nav_avg_sound:
+                Toast.makeText(this, "לזיהוי פשוט", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, MainActivity.class));
+                return true;
+            case R.id.nav_Bluetooth2Led:
+                Toast.makeText(this, "התחברות לבלוטות'", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, SettingsAndBluetooth.class));
+                return true;
+            case R.id.nav_info:
+                Toast.makeText(this, "הדרכה", Toast.LENGTH_SHORT).show();
+                //startActivity(new Intent(homePage.this, info_activity.class));
+                info();
+                return true;
+            case R.id.disable_bluetooth:
+                Toast.makeText(this, "התנתקות מהבלוטות'", Toast.LENGTH_SHORT).show();
+                disableBluetooth();
+                return true;
+            default:
+                return true;
+        } }
 
+    private void info() {
+    }
+    private void disableBluetooth() {
+    }
+
+    @SuppressLint("RestrictedApi")
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater =getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        if(menu instanceof MenuBuilder){
+            MenuBuilder m = (MenuBuilder) menu;
+            m.setOptionalIconsVisible(true);
+        }
+        return true;
+    }
 
 }

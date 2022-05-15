@@ -41,9 +41,6 @@
             android:label="זיהוי פשוט"
             android:exported="false" />
         <activity
-            android:name=".helper"
-            android:exported="false" />
-        <activity
             android:name=".arduino2Bluetooth.SettingsAndBluetooth"
             android:exported="false" />
 

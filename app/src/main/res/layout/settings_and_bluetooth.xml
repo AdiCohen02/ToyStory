@@ -3,6 +3,8 @@
 xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:paddingHorizontal="5dp"
+    android:paddingVertical="20dp"
     android:layout_height="match_parent"
     tools:context=".arduino2Bluetooth.SettingsAndBluetooth">
 
@@ -14,76 +16,44 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.053"
+        app:layout_constraintHorizontal_bias="0.455"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.045" />
+        app:layout_constraintVertical_bias="0.946" />
 
-    <TextView
-        android:id="@+id/toy_exist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="משחקים עם הבובה?"
-        android:textSize="28dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/switchToyBtn"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.229" />
-
-    <Switch
-        android:id="@+id/switchToyBtn"
-        android:layout_width="72dp"
-        android:layout_height="71dp"
-        android:layout_marginStart="44dp"
-        android:padding="6dp"
-        android:scaleX="1.5"
-        android:scaleY="1.5"
-        android:switchMinWidth="40dp"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toy_exist"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:background="#272BB575"
+        android:padding="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="16dp">
+        android:layout_height="200dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.316"
+        tools:layout_editor_absoluteX="0dp">
 
-        <TextView
-            android:id="@+id/bluetooth_state"
-            android:layout_width="343dp"
-            android:layout_height="72dp"
-            android:layout_weight="0.5"
-            android:gravity="center"
-            android:text="state"
-            android:textSize="30sp" />
-
-        <TextView
-            android:id="@+id/bluetooth_paired"
-            android:layout_width="343dp"
-            android:layout_height="42dp"
-            android:layout_weight="0.5"
-            android:gravity="center"
-            android:text="paired"
-            android:textSize="30sp" />
-
-        <ListView
-            android:id="@+id/mylist"
+        <LinearLayout
+            android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/purple_700"
-            android:textSize="5sp"></ListView>
+            android:layout_marginTop="4dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="16dp">
 
+            <ListView
+                android:id="@+id/mylist"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="10.0sp"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/purple_700"
+                android:textSize="5sp"></ListView>
 
-    </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -93,9 +63,11 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
         android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/checkToy"
+        app:layout_constraintVertical_bias="0.468"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp">
+        tools:layout_editor_absoluteX="-16dp">
 
         <Button
             android:id="@+id/buttonlightup"
@@ -118,25 +90,30 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="122dp"
         android:gravity="center_horizontal"
-        android:text="AVAILABLE DEVICES"
+        android:text="מכשירים זמינים:"
+        android:textColor="@color/black"
         android:textSize="30sp"
-        app:layout_constraintTop_toTopOf="@+id/toy_exist"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.107"
         tools:layout_editor_absoluteX="0dp" />
 
     <TextView
         android:id="@+id/checkToy"
         android:layout_width="wrap_content"
         android:layout_height="33dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="64dp"
         android:layout_weight="0.5"
         android:gravity="center"
         android:text="לחץ לבדיקת החיבור לבובה"
         android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+        app:layout_constraintTop_toBottomOf="@+id/scrollView2"
+        app:layout_constraintVertical_bias="0.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
