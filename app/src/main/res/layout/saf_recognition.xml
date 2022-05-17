@@ -26,7 +26,7 @@
         style="@style/Widget.AppCompat.SeekBar.Discrete"
         android:layout_width="361dp"
         android:layout_height="52dp"
-        android:max="9"
+        android:max="6"
         android:min="0"
         android:progress="2"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -52,34 +52,34 @@
         android:id="@+id/week"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="חלש מאד"
+        android:text="לחישה"
         android:textColor="@color/purple_700"
         android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.994"
+        app:layout_constraintHorizontal_bias="0.988"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.236" />
+        app:layout_constraintVertical_bias="0.243" />
 
     <TextView
         android:id="@+id/medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="דיבור בינוני"
         android:textColor="@color/purple_700"
-        android:text="עוצמה בינונית"
         android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/week"
+        app:layout_constraintStart_toEndOf="@+id/strong"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.226" />
+        app:layout_constraintVertical_bias="0.243" />
 
     <TextView
         android:id="@+id/strong"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="עוצמה גבוהה"
+        android:text="קול רם"
         android:textColor="@color/purple_700"
         android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="parent"

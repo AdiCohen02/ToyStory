@@ -19,6 +19,11 @@
             android:title="התחברות לbluetooth" />
 
         <item
+            android:id="@+id/nav_voice_recognition"
+            android:icon="@drawable/ic_baseline_bluetooth_audio_24"
+            android:title="לזיהוי דיבור" />
+
+        <item
             android:id="@+id/disable_bluetooth"
             android:icon="@drawable/ic_baseline_bluetooth_disabled_24"
             android:title="התנתקות מהbluetooth" />

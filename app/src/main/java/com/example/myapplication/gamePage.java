@@ -19,7 +19,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -34,14 +33,19 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.myapplication.arduino2Bluetooth.SettingsAndBluetooth;
+import com.example.myapplication.voiceEditor.BluetoothActions;
+import com.example.myapplication.voiceEditor.MainActivity;
 import com.newventuresoftware.waveform.WaveformView;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @SuppressWarnings("ALL")
 public class gamePage extends AppCompatActivity {
     public static final Integer RecordAudioRequestCode = 1;
+    private Integer DOG_ACTION_DURIATION = 2000;
     private static SpeechRecognizer speechRecognizer;
     public static final Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
     private TextView textView;
@@ -55,6 +59,7 @@ public class gamePage extends AppCompatActivity {
     private Button chooseWordBtn;
     ImageButton playRecord;
 
+    public SettingsAndBluetooth s = new SettingsAndBluetooth();
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -87,7 +92,7 @@ public class gamePage extends AppCompatActivity {
         chooseWordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showRecSettingsDialog();
+                showChooseWordDialog();
             }
         });
 
@@ -340,16 +345,23 @@ public class gamePage extends AppCompatActivity {
     private void shouldReact() throws InterruptedException {
 
         changeColor();
-        new Thread(new Runnable() {
+        BluetoothActions.dog_reaction();
+
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
             public void run() {
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                returnColor();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //todo: call boolean checked
+                        System.out.println("1111: calling reaction");
+                        returnColor();
+                    }
+                });
             }
-        }).start();
+        };
+        timer.schedule(task, DOG_ACTION_DURIATION); // This is the time it takes for the dog
     }
 
     private void returnColor() {
@@ -404,14 +416,6 @@ public class gamePage extends AppCompatActivity {
 
         });
 
-//        startAudioRecordingSafe();
-//
-//        short[] samples = new short[] {0, 4, 5};
-//        try {
-//            samples = getAudioSample();
-//        } catch (IOException ioException) {
-//            ioException.printStackTrace();
-//        }
     }
 
     protected void onStop(){
@@ -425,35 +429,6 @@ public class gamePage extends AppCompatActivity {
         super.onDestroy();
         speechRecognizer.destroy();
     }
-
-//    final WaveformView mPlaybackView = (WaveformView) findViewById(R.id.rawDataView);
-
-//    private void startAudioRecordingSafe() {
-//        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.RECORD_AUDIO)
-//                == PackageManager.PERMISSION_GRANTED) {
-//            mRecordingThread.startRecording();
-//        } else {
-//            checkPermission();
-//        }
-//    }
-
-//    private short[] getAudioSample() throws IOException{
-//        InputStream is = getResources().openRawResource(R.raw.jinglebells);
-//        byte[] data;
-//        try {
-//            data = IOUtils.toByteArray(is);
-//        } finally {
-//            if (is != null) {
-//                is.close();
-//            }
-//        }
-//
-//        ShortBuffer sb = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer();
-//        short[] samples = new short[sb.limit()];
-//        sb.get(samples);
-//        return samples;
-//    }
-
 
     private void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -483,12 +458,11 @@ public class gamePage extends AppCompatActivity {
     }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            /*
+        switch (item.getItemId()) {
             case R.id.nav_avg_sound:
-                Toast.makeText(this, "לזיהוי פשוט", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "עובר לזיהוי פשוט", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, MainActivity.class));
-                return true;*/
+                return true;
             case R.id.nav_Bluetooth2Led:
                 Toast.makeText(this, "התחברות לבלוטות'", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, SettingsAndBluetooth.class));
@@ -500,18 +474,30 @@ public class gamePage extends AppCompatActivity {
                 return true;
             case R.id.disable_bluetooth:
                 Toast.makeText(this, "התנתקות מהבלוטות'", Toast.LENGTH_SHORT).show();
-                disableBluetooth();
+                BluetoothActions.shutDown();
                 return true;
-            case R.id.home:
-                Toast.makeText(this, "למסך הבית", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, homePage.class));
-                return true;
+            case R.id.nav_voice_recognition:
+                Toast.makeText(this, "עובר לזיהוי דיבור", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, gamePage.class));
             default:
                 return true;
-        } }
-    private void info() {
-    }
-    private void disableBluetooth() {
+        }
     }
 
+    private void info() {
+        androidx.appcompat.app.AlertDialog.Builder alertDialog = new androidx.appcompat.app.AlertDialog.Builder(gamePage.this);
+        alertDialog.setTitle("הדרכה לזיהוי פשוט: על מנת להשתמש בדף זה עלייך...");
+        alertDialog.setNegativeButton("OK",
+                new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        Toast.makeText(gamePage.this,"מעולה, בואו נתחיל!", Toast.LENGTH_SHORT).show();
+                        dialog.cancel();
+                    }
+                });
+        androidx.appcompat.app.AlertDialog alert = alertDialog.create();
+        alert.setCanceledOnTouchOutside(false);
+        alert.show();
+    }
 }
