@@ -3,6 +3,7 @@ package com.example.myapplication;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.cardview.widget.CardView;
@@ -22,6 +24,11 @@ import com.example.myapplication.voiceEditor.MainActivity;
 public class homePage extends AppCompatActivity {
 
     public static SettingsAndBluetooth s = new SettingsAndBluetooth();
+    public int firstTime =0, whichActivity;
+    public boolean rememberMyChoice;
+    public static final String PREFERENCES = "preferences";
+    String[] items = {"זיהוי דיבור","זיהוי סף"};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +48,49 @@ public class homePage extends AppCompatActivity {
         playWithout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startDialog();
                 Toast.makeText(homePage.this, "משחק עם האפליקציה בלבד", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(homePage.this, gamePage.class));
+                //startActivity(new Intent(homePage.this, gamePage.class));
             }
         });
+    }
+
+    private void startDialog() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(homePage.this);
+        alertDialog.setTitle("בחירת מסך ברירת מחדל");
+        int checkedItem = 1;
+        alertDialog.setNegativeButton("קבע מסך כברירת מחדל",
+                new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        Toast.makeText(homePage.this,"מעולה, בואו נתחיל!", Toast.LENGTH_SHORT).show();
+                        defaultActivity(rememberMyChoice, whichActivity);
+                        dialog.cancel();
+                    }
+                });
+        alertDialog.setSingleChoiceItems(items, checkedItem, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                whichActivity = which;
+            }
+        });
+        AlertDialog alert = alertDialog.create();
+        alert.setCanceledOnTouchOutside(false);
+        alert.show();
+    }
+
+
+    private void defaultActivity(boolean rememberMyChoice, int whichActivity) {
+        //TODO: start the selected activity - DONE!
+        //TODO: set the activity as default:)
+        if (whichActivity ==0){
+            startActivity(new Intent(this, gamePage.class));
+        } else {
+            startActivity(new Intent(this, MainActivity.class)); }
+
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
+        //savedswitch = sharedPreferences.getBoolean(TOY_SWITCH, false);
     }
 
 

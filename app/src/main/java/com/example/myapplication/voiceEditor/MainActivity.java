@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
@@ -17,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -77,9 +79,17 @@ public class MainActivity extends AppCompatActivity {
         Button btnTresh = (Button) findViewById(R.id.threshold);
         Button btnStart = (Button) findViewById(R.id.start_recording1);
         TextView currSeek = (TextView) findViewById(R.id.volume_curr_value);
+        ImageButton playRecord = (ImageButton) findViewById(R.id.playRecord2);
         childLevel = findViewById(R.id.child_level);
         environmentSwitch = (Switch) findViewById(R.id.switchEnvironment);
 
+        final MediaPlayer mp = MediaPlayer.create(this, R.raw.bark);
+        playRecord.setOnClickListener(new View.OnClickListener(){
+
+            public void onClick(View v) {
+                mp.start();
+            }
+        });
 
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},

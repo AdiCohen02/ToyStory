@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -28,6 +29,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.core.app.ActivityCompat;
@@ -35,6 +37,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.myapplication.R;
 import com.example.myapplication.gamePage;
+import com.example.myapplication.homePage;
 import com.example.myapplication.voiceEditor.BluetoothActions;
 import com.example.myapplication.voiceEditor.MainActivity;
 
@@ -57,8 +60,11 @@ public class SettingsAndBluetooth extends AppCompatActivity {
     private int MY_PERMISSIONS_REQUEST_CODE = 123;
     private Button startBtn2;
 
-
+    public int firstTime =0, whichActivity;
+    public boolean rememberMyChoice;
     public static final String PREFERENCES = "preferences";
+    String[] items = {"זיהוי דיבור","זיהוי סף"};
+
     public static final String TOY_SWITCH = "switch";
 
     @Override
@@ -89,10 +95,11 @@ public class SettingsAndBluetooth extends AppCompatActivity {
         startBtn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                startDialog();
                 //saveData();
-                Intent intent1 = new Intent(SettingsAndBluetooth.this, gamePage.class);
-                intent1.putExtra("toyexist", true);
-                startActivity(intent1);
+                //Intent intent1 = new Intent(SettingsAndBluetooth.this, gamePage.class);
+                //intent1.putExtra("toyexist", true);
+                //startActivity(intent1);
             }
         });
 
@@ -127,7 +134,30 @@ public class SettingsAndBluetooth extends AppCompatActivity {
         });
 
     }
-
+    private void startDialog() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(SettingsAndBluetooth.this);
+        alertDialog.setTitle("בחירת מסך ברירת מחדל");
+        int checkedItem = 1;
+        alertDialog.setNegativeButton("קבע מסך כברירת מחדל",
+                new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        Toast.makeText(SettingsAndBluetooth.this,"מעולה, בואו נתחיל!", Toast.LENGTH_SHORT).show();
+                        defaultActivity(rememberMyChoice, whichActivity);
+                        dialog.cancel();
+                    }
+                });
+        alertDialog.setSingleChoiceItems(items, checkedItem, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                whichActivity = which;
+            }
+        });
+        AlertDialog alert = alertDialog.create();
+        alert.setCanceledOnTouchOutside(false);
+        alert.show();
+    }
 
     @SuppressLint("MissingPermission")
     @Override
@@ -179,6 +209,18 @@ public class SettingsAndBluetooth extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void defaultActivity(boolean rememberMyChoice, int whichActivity) {
+        //TODO: start the selected activity - DONE!
+        //TODO: set the activity as default:)
+        if (whichActivity ==0){
+            startActivity(new Intent(this, gamePage.class));
+        } else {
+            startActivity(new Intent(this, MainActivity.class)); }
+
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
+        //savedswitch = sharedPreferences.getBoolean(TOY_SWITCH, false);
     }
 
     @SuppressLint("MissingPermission")
