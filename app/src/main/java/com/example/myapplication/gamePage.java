@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,7 +20,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,15 +46,15 @@ public class gamePage extends AppCompatActivity {
     private Integer DOG_ACTION_DURIATION = 2000;
     private static SpeechRecognizer speechRecognizer;
     public static final Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-    private TextView textView;
+    private TextView textView, par, res;
     private ImageView micButton;
     private Button recognizeSettingBtn;
-    private boolean is_on;
+    private boolean is_on, withDog = true;
     private MediaPlayer mp;
     private WaveformView mRealtimeWaveformView;
     private static final int REQUEST_RECORD_AUDIO = 13;
-    public String chosenWord = null;
-    public int recStatus = 0; // 0 -  אך ורק זיהוי דיבור, 1 - זיהוי סף וזיהוי דיבור.
+    public String chosenWord = "nothing";
+    public int recStatus = 0, checkedItem = 4; // 0 -  אך ורק זיהוי דיבור, 1 - זיהוי סף וזיהוי דיבור.
     private Button chooseWordBtn;
     ImageButton playRecord;
 
@@ -69,6 +67,7 @@ public class gamePage extends AppCompatActivity {
         // permissiom is handled
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game);
+        //TODO: determine the value of "withDog" (Boolean)
         mp = MediaPlayer.create(this, R.raw.bark);
         System.out.println("1111: hi");
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
@@ -81,13 +80,13 @@ public class gamePage extends AppCompatActivity {
         chooseWordBtn = findViewById(R.id.chooseWordBtn);
         playRecord = findViewById(R.id.playRecord);
 
-        playRecord.setOnClickListener(new View.OnClickListener(){
+        ////////////////////////////////////////////////////////// Listeners:: //////////////////////////////////////////
 
+        playRecord.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-                mp.start();
+                bark();
             }
         });
-
 
         chooseWordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,7 +123,6 @@ public class gamePage extends AppCompatActivity {
 
             @Override
             public void onReadyForSpeech(Bundle bundle) {
-
             }
 
             @Override
@@ -200,20 +198,13 @@ public class gamePage extends AppCompatActivity {
                 textView.setHint("onResults...");
                 ArrayList<String> data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                 textView.setText(data.get(0));
-                if (chosenWord.isEmpty()){
-                    if (data.get(0).equals(chosenWord)) {
-                        try {
-                            shouldReact(chosenWord, data);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } }
-                }else{
-                    if (!data.get(0).equals("")) {
-                        try {
-                            shouldReact(chosenWord, data);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } } }
+                System.out.println("res: "+ data.get(0));
+                System.out.println("res, data: "+ data);
+                try {
+                    shouldReact();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
                 speechRecognizer.startListening(speechRecognizerIntent);
 
@@ -223,13 +214,20 @@ public class gamePage extends AppCompatActivity {
             public void onPartialResults(Bundle partialResults) {
                 ArrayList data = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                 String word = (String) data.get(data.size() - 1);
+                System.out.println("par: "+word);
                 textView.setText(word);
-                if (!data.get(0).equals("")) {
+                if (chosenWord.equals("nothing")){
                     try {
-                        shouldReact(chosenWord, data);
+                        shouldReact();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                    }} }
+                    }
+                }else {
+                    if (word.contains(chosenWord)){
+                        try {
+                            shouldReact();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace(); } } } }
 
             @Override
             public void onEvent(int i, Bundle bundle) {
@@ -238,115 +236,7 @@ public class gamePage extends AppCompatActivity {
         });
     }
 
-    private void showChooseWordDialog() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(gamePage.this);
-        alertDialog.setTitle("לבחור מילה");
-        String[] items = {"בוא", "עוד","הב","שב", "ללא מילה"};
-        int checkedItem = 1;
-        alertDialog.setNegativeButton("בחרתי",
-                new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int id)
-                    {
-                        Toast.makeText(gamePage.this,"מעולה, בואו נתחיל!", Toast.LENGTH_SHORT).show();
-                        dialog.cancel();
-                    }
-                });
-        alertDialog.setSingleChoiceItems(items, checkedItem, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case 0:
-                        chosenWord = items[0];
-                        break;
-                    case 1:
-                        chosenWord = items[1];
-                        break;
-                    case 2:
-                        chosenWord = items[2];
-                        break;
-                    case 3:
-                        chosenWord = null;
-                        break;
-                }
-            }
-        });
-        AlertDialog alert = alertDialog.create();
-        alert.setCanceledOnTouchOutside(false);
-        alert.show();
-    }
-
-    private void showRecSettingsDialog() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(gamePage.this);
-        alertDialog.setTitle("בחר הגדרות זיהוי");
-        String[] items = {"זיהוי דיבור","זיהוי סף"};
-        int checkedItem = 1;
-        alertDialog.setNegativeButton("בחרתי",
-                new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int id)
-                    {
-                        Toast.makeText(gamePage.this,"מעולה, בואו נתחיל!", Toast.LENGTH_SHORT).show();
-                        dialog.cancel();
-                    }
-                });
-        alertDialog.setSingleChoiceItems(items, checkedItem, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                recStatus = which;
-            }
-        });
-        AlertDialog alert = alertDialog.create();
-        alert.setCanceledOnTouchOutside(false);
-        alert.show();
-    }
-
-
-    private void shouldReact(String chosenWord, ArrayList<String> data) throws InterruptedException {
-
-        if (chosenWord==null){
-            changeColor();//hi
-        }else {
-            if (data.contains(chosenWord)){
-                changeColor();
-            }
-        }
-        BluetoothActions.dog_reaction();
-
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //todo: call boolean checked
-                        System.out.println("1111: calling reaction");
-                        //returnColor();
-                    }
-                });
-            }
-        };
-        timer.schedule(task, DOG_ACTION_DURIATION); // This is the time it takes for the dog
-    }
-
-    private void returnColor() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                RelativeLayout bgElement = (RelativeLayout) findViewById(R.id.game);
-                bgElement.setBackgroundColor(Color.WHITE);
-            }
-        });
-    }
-
-
-    private void changeColor() {
-        mp.start();
-        //RelativeLayout bgElement = (RelativeLayout) findViewById(R.id.game);
-        //bgElement.setBackgroundColor(Color.BLUE);
-    }
-
+    ////////////////////////////////////////////////////////// Recognition:: //////////////////////////////////////////
 
     @Override
     protected void onStart(){
@@ -397,6 +287,97 @@ public class gamePage extends AppCompatActivity {
         speechRecognizer.destroy();
     }
 
+    ////////////////////////////////////////////////////////// Feedbacks:: //////////////////////////////////////////
+
+    private void shouldReact() throws InterruptedException {
+        if (withDog) {
+            bark();
+        }else {
+            BluetoothActions.dog_reaction();
+            Timer timer = new Timer();
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //todo: call boolean checked
+                            System.out.println("1111: calling reaction");
+                        }}); }};
+            timer.schedule(task, DOG_ACTION_DURIATION); // This is the time it takes for the dog */
+        }
+        onStop();
+    }
+
+    private void bark() { mp.start(); }
+
+    ////////////////////////////////////////////////////////// Dialogs:: //////////////////////////////////////////
+
+    private void showChooseWordDialog() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(gamePage.this);
+        alertDialog.setTitle("לבחור מילה");
+        String[] items = {"בוא", "עוד","הב","שב", "ללא מילה"};
+        alertDialog.setNegativeButton("בחרתי",
+                new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        Toast.makeText(gamePage.this,"מעולה, בואו נתחיל!", Toast.LENGTH_SHORT).show();
+                        dialog.cancel();
+                    }
+                });
+        alertDialog.setSingleChoiceItems(items, checkedItem, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                checkedItem = which;
+                switch (which) {
+                    case 0:
+                        chosenWord = items[0];
+                        break;
+                    case 1:
+                        chosenWord = items[1];
+                        break;
+                    case 2:
+                        chosenWord = items[2];
+                        break;
+                    case 3:
+                        chosenWord = "nothing";
+                        break;
+                }
+            }
+        });
+        AlertDialog alert = alertDialog.create();
+        alert.setCanceledOnTouchOutside(false);
+        alert.show();
+    }
+
+    private void showRecSettingsDialog() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(gamePage.this);
+        alertDialog.setTitle("בחר הגדרות זיהוי");
+        String[] items = {"זיהוי דיבור","זיהוי סף"};
+        int checkedItem = 1;
+        alertDialog.setNegativeButton("בחרתי",
+                new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int id)
+                    {
+                        Toast.makeText(gamePage.this,"מעולה, בואו נתחיל!", Toast.LENGTH_SHORT).show();
+                        dialog.cancel();
+                    }
+                });
+        alertDialog.setSingleChoiceItems(items, checkedItem, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                recStatus = which;
+            }
+        });
+        AlertDialog alert = alertDialog.create();
+        alert.setCanceledOnTouchOutside(false);
+        alert.show();
+    }
+
+    ////////////////////////////////////////////////////////// Permissions: //////////////////////////////////////////
+
     private void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, RecordAudioRequestCode);
@@ -411,6 +392,8 @@ public class gamePage extends AppCompatActivity {
                 Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
         }
     }
+
+    ////////////////////////////////////////////////////////// Menu: //////////////////////////////////////////
 
     @SuppressLint("RestrictedApi")
     @Override

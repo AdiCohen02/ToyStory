@@ -8,17 +8,6 @@
     android:id="@+id/game"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/result"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:textColor="#000"
-        android:textSize="26sp"
-        android:textStyle="normal"/>
-
     <ImageButton
         android:id="@+id/playRecord"
         android:layout_width="wrap_content"
@@ -33,6 +22,7 @@
         android:layout_marginTop="202dp"
         android:background="@drawable/dogifff"
         android:scaleType="centerInside" />
+
 
     <Button
         android:id="@+id/recognizeSettingBtn"
@@ -58,10 +48,11 @@
         android:layout_marginRight="10dp"
         android:layout_height="wrap_content">
 
+
         <TextView
             android:id="@+id/text"
-            android:layout_width="312dp"
-            android:layout_height="wrap_content"
+            android:layout_width="306dp"
+            android:layout_height="101dp"
             android:layout_centerInParent="true"
             android:layout_marginRight="15dp"
             android:layout_toLeftOf="@id/button"
@@ -82,6 +73,7 @@
 
 
     </LinearLayout>
+
 
 
 
