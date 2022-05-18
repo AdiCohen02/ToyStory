@@ -305,7 +305,7 @@ public class gamePage extends AppCompatActivity {
     private void shouldReact(String chosenWord, ArrayList<String> data) throws InterruptedException {
 
         if (chosenWord==null){
-            changeColor();
+            changeColor();//hi
         }else {
             if (data.contains(chosenWord)){
                 changeColor();
