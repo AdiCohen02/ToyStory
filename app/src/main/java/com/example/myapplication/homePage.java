@@ -19,7 +19,7 @@ import androidx.cardview.widget.CardView;
 
 import com.example.myapplication.arduino2Bluetooth.SettingsAndBluetooth;
 import com.example.myapplication.voiceEditor.BluetoothActions;
-import com.example.myapplication.voiceEditor.MainActivity;
+import com.example.myapplication.voiceEditor.safRecognition;
 
 public class homePage extends AppCompatActivity {
 
@@ -28,6 +28,12 @@ public class homePage extends AppCompatActivity {
     public boolean rememberMyChoice;
     public static final String PREFERENCES = "preferences";
     String[] items = {"זיהוי דיבור","זיהוי סף"};
+
+    public static final String DEFAULT_VALUE = "saf";
+    public static final String CHOSE_DEFAULT = "false";
+    public static boolean onStart = true;
+    public boolean defaultSaf = true;
+    public boolean askedDefault = false;
 
 
     @Override
@@ -48,16 +54,18 @@ public class homePage extends AppCompatActivity {
         playWithout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startDialog();
-                Toast.makeText(homePage.this, "משחק עם האפליקציה בלבד", Toast.LENGTH_SHORT).show();
-                //startActivity(new Intent(homePage.this, gamePage.class));
+                if (onStart){ startDialog();}
+                else{
+                    if (defaultSaf) { startActivity(new Intent(homePage.this, safRecognition.class)); }
+                    else { startActivity(new Intent(homePage.this, gamePage.class)); }
+                }
             }
         });
     }
 
     private void startDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(homePage.this);
-        alertDialog.setTitle("בחירת מסך ברירת מחדל");
+        alertDialog.setTitle("הגדר מסך ברירת מחדל");
         int checkedItem = 1;
         alertDialog.setNegativeButton("קבע מסך כברירת מחדל",
                 new DialogInterface.OnClickListener()
@@ -65,7 +73,6 @@ public class homePage extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id)
                     {
                         Toast.makeText(homePage.this,"מעולה, בואו נתחיל!", Toast.LENGTH_SHORT).show();
-                        defaultActivity(rememberMyChoice, whichActivity);
                         dialog.cancel();
                     }
                 });
@@ -81,16 +88,30 @@ public class homePage extends AppCompatActivity {
     }
 
 
-    private void defaultActivity(boolean rememberMyChoice, int whichActivity) {
+    private void defaultActivity(int whichActivity) {
         //TODO: start the selected activity - DONE!
         //TODO: set the activity as default:)
         if (whichActivity ==0){
             startActivity(new Intent(this, gamePage.class));
         } else {
-            startActivity(new Intent(this, MainActivity.class)); }
+            startActivity(new Intent(this, safRecognition.class)); }
 
+    }
+
+    public void saveData() {
         SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
-        //savedswitch = sharedPreferences.getBoolean(TOY_SWITCH, false);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+//        editor.putBoolean(SILENCE_SWITCH, environmentSwitch.isChecked());
+        editor.apply();
+    }
+
+    public void updateViews() {
+    }
+
+    public void loadData() {
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
+//        defaultSaf = sharedPreferences.getInt(DEFAULT_VALUE, "saf");
+//        askedDefault = sharedPreferences.getBoolean(DE, false);
     }
 
 
@@ -110,7 +131,7 @@ public class homePage extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.nav_avg_sound:
                 Toast.makeText(this, "עובר לזיהוי פשוט", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, MainActivity.class));
+                startActivity(new Intent(this, safRecognition.class));
                 return true;
             case R.id.nav_Bluetooth2Led:
                 Toast.makeText(this, "התחברות לבלוטות'", Toast.LENGTH_SHORT).show();

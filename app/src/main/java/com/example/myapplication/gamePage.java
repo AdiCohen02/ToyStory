@@ -34,13 +34,11 @@ import androidx.core.content.ContextCompat;
 
 import com.example.myapplication.arduino2Bluetooth.SettingsAndBluetooth;
 import com.example.myapplication.voiceEditor.BluetoothActions;
-import com.example.myapplication.voiceEditor.MainActivity;
+import com.example.myapplication.voiceEditor.safRecognition;
 import com.newventuresoftware.waveform.WaveformView;
 
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 @SuppressWarnings("ALL")
 public class gamePage extends AppCompatActivity {
@@ -311,23 +309,24 @@ public class gamePage extends AppCompatActivity {
                 changeColor();
             }
         }
-        BluetoothActions.dog_reaction();
-
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //todo: call boolean checked
-                        System.out.println("1111: calling reaction");
-                        //returnColor();
-                    }
-                });
-            }
-        };
-        timer.schedule(task, DOG_ACTION_DURIATION); // This is the time it takes for the dog
+//        BluetoothActions.dog_reaction(49);
+//
+//        Timer timer = new Timer();
+//        TimerTask task = new TimerTask() {
+//            @Override
+//            public void run() {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        //todo: call boolean checked
+//                        System.out.println("1111: calling reaction");
+//                        returnColor();
+//                        BluetoothActions.dog_reaction(48);
+//                    }
+//                });
+//            }
+//        };
+//        timer.schedule(task, DOG_ACTION_DURIATION); // This is the time it takes for the dog
     }
 
     private void returnColor() {
@@ -428,7 +427,7 @@ public class gamePage extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.nav_avg_sound:
                 Toast.makeText(this, "עובר לזיהוי פשוט", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, MainActivity.class));
+                startActivity(new Intent(this, safRecognition.class));
                 return true;
             case R.id.nav_Bluetooth2Led:
                 Toast.makeText(this, "התחברות לבלוטות'", Toast.LENGTH_SHORT).show();
