@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,14 +36,12 @@ import androidx.core.content.ContextCompat;
 
 import com.example.myapplication.R;
 import com.example.myapplication.gamePage;
-import com.example.myapplication.homePage;
 import com.example.myapplication.voiceEditor.BluetoothActions;
-import com.example.myapplication.voiceEditor.MainActivity;
+import com.example.myapplication.voiceEditor.safRecognition;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
-import java.util.UUID;
 
 public class SettingsAndBluetooth extends AppCompatActivity {
     private static final int REQUEST_ENABLE_BT = 88;
@@ -88,7 +85,7 @@ public class SettingsAndBluetooth extends AppCompatActivity {
         btnshut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                BluetoothActions.dog_reaction();
+                BluetoothActions.send2Bluetooth(48);
             }
         });
 
@@ -103,14 +100,13 @@ public class SettingsAndBluetooth extends AppCompatActivity {
             }
         });
 
-//        enableLedButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (blsocket != null && blsocket.isConnected()) {
-//                    send2Bluetooth(49);
-//                }
-//            }
-//        });
+        enableLedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("1111: reached light up");
+                BluetoothActions.dog_reaction();
+            }
+        });
 
 
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
@@ -120,9 +116,9 @@ public class SettingsAndBluetooth extends AppCompatActivity {
             @SuppressLint("MissingPermission")
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                System.out.println("1111: start onItemClick");
-                Toast.makeText(getApplicationContext(), "item with address: " + devicesStrings.get(i) + " clicked", Toast.LENGTH_LONG).show();
-                listt.getChildAt(i).setBackgroundColor(Color.BLUE);
+//                System.out.println("1111: start onItemClick");
+                Toast.makeText(getApplicationContext(), "item with address: " + devicesStrings.get(i) + " clicked", Toast.LENGTH_SHORT).show();
+//                listt.getChildAt(i).setBackgroundColor(Color.BLUE);
                 try {
                     //todo: connect object
                     System.out.println("1111: trying connect to led " + ListDevices.get(i).getName());
@@ -217,7 +213,7 @@ public class SettingsAndBluetooth extends AppCompatActivity {
         if (whichActivity ==0){
             startActivity(new Intent(this, gamePage.class));
         } else {
-            startActivity(new Intent(this, MainActivity.class)); }
+            startActivity(new Intent(this, safRecognition.class)); }
 
         SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
         //savedswitch = sharedPreferences.getBoolean(TOY_SWITCH, false);
@@ -243,35 +239,49 @@ public class SettingsAndBluetooth extends AppCompatActivity {
     @SuppressLint("MissingPermission")
     void connect2LED(BluetoothDevice device, int index) throws IOException {
         System.out.println("1111: start connect2LED");
-        UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
         if (!hasPermissions()) {
             my_request();
         }
-        blsocket = device.createInsecureRfcommSocketToServiceRecord(uuid);
-        System.out.println("1111: createInsecureRfcommSocketToServiceRecord");
-        try {
-            // Connect to the remote device through the socket. This call blocks
-            // until it succeeds or throws an exception.
-            blsocket.connect();
-        } catch (IOException connectException) {
-            // Unable to connect; close the socket and return.
-            System.out.println("1111: Unable to connect; close the socket and return." + connectException);
-//            bluetoothPaired.setText("couldn't connect: " + device.getName());
-            Toast.makeText(getApplicationContext(), "couldn't connect: " + device.getName(), Toast.LENGTH_LONG).show();
-            //listt.getChildAt(index).setBackgroundColor(Color.RED);
-            try {
-                blsocket.close();
-            } catch (IOException closeException) {
-                System.out.println("1111: Could not close the client socket" + closeException);
-            }
-            return;
+        if (BluetoothActions.connect2device(device)){
+            Toast.makeText(getApplicationContext(), "Device connected successfully!", Toast.LENGTH_SHORT).show();
         }
-        System.out.println("1111: connected");
-        pairedBluetoothDevice = device;
-        //bluetoothPaired.setText("CONNECTED: " + device.getName());
-        //bluetoothPaired.setTextColor(getResources().getColor(R.color.purple_200));
-        Toast.makeText(getApplicationContext(), "Device connected successfully!", Toast.LENGTH_LONG).show();
+        else {
+            Toast.makeText(getApplicationContext(), "couldn't connect: " + device.getName(), Toast.LENGTH_LONG).show();
+        }
     }
+
+//    @SuppressLint("MissingPermission")
+//    void connect2LED(BluetoothDevice device, int index) throws IOException {
+//        System.out.println("1111: start connect2LED");
+//        UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
+//        if (!hasPermissions()) {
+//            my_request();
+//        }
+//        blsocket = device.createInsecureRfcommSocketToServiceRecord(uuid);
+//        System.out.println("1111: createInsecureRfcommSocketToServiceRecord");
+//        try {
+//            // Connect to the remote device through the socket. This call blocks
+//            // until it succeeds or throws an exception.
+//            blsocket.connect();
+//        } catch (IOException connectException) {
+//            // Unable to connect; close the socket and return.
+//            System.out.println("1111: Unable to connect; close the socket and return." + connectException);
+////            bluetoothPaired.setText("couldn't connect: " + device.getName());
+//            Toast.makeText(getApplicationContext(), "couldn't connect: " + device.getName(), Toast.LENGTH_LONG).show();
+//            //listt.getChildAt(index).setBackgroundColor(Color.RED);
+//            try {
+//                blsocket.close();
+//            } catch (IOException closeException) {
+//                System.out.println("1111: Could not close the client socket" + closeException);
+//            }
+//            return;
+//        }
+//        System.out.println("1111: connected");
+//        pairedBluetoothDevice = device;
+//        //bluetoothPaired.setText("CONNECTED: " + device.getName());
+//        //bluetoothPaired.setTextColor(getResources().getColor(R.color.purple_200));
+//        Toast.makeText(getApplicationContext(), "Device connected successfully!", Toast.LENGTH_LONG).show();
+//    }
 
 //    void send2Bluetooth(int status) {
 //        System.out.println("1111: start send2Bluetooth");
@@ -344,6 +354,7 @@ public class SettingsAndBluetooth extends AppCompatActivity {
     private void my_request() {
         String[] permissions = {Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_ADVERTISE};
         ActivityCompat.requestPermissions(this, permissions, MY_PERMISSIONS_REQUEST_CODE);
+        System.out.println("1111: asking for perm");
         return;
     }
 
@@ -378,7 +389,7 @@ public class SettingsAndBluetooth extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.nav_avg_sound:
                 Toast.makeText(this, "עובר לזיהוי פשוט", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, MainActivity.class));
+                startActivity(new Intent(this, safRecognition.class));
                 return true;
             case R.id.nav_Bluetooth2Led:
                 Toast.makeText(this, "התחברות לבלוטות'", Toast.LENGTH_SHORT).show();

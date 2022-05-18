@@ -37,7 +37,7 @@
             android:label="צעצוע של דיבור"
             android:exported="false" />
         <activity
-            android:name=".voiceEditor.MainActivity"
+            android:name=".voiceEditor.safRecognition"
             android:label="זיהוי פשוט"
             android:exported="false" />
         <activity

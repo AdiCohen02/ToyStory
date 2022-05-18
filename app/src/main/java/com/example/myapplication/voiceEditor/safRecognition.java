@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends AppCompatActivity {
+public class safRecognition extends AppCompatActivity {
 
     public boolean startedThred = false;
     public double noiseLevel = 1000;
@@ -60,7 +60,9 @@ public class MainActivity extends AppCompatActivity {
     private Integer savedVolume;
     private boolean savedswitch;
 
-    public List<Double> list=new ArrayList<Double>();
+    public List<Double> samples_list=new ArrayList<Double>();
+    double s_avg = 0;
+
 
 
     private AudioRecord recorder;
@@ -127,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
         loadData();
         updateViews();
         childLevel.setRotation(180);
+        currSeek.setText("העוצמה הנוכחית היא " + savedVolume * 5 + "dB");
 
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,8 +137,7 @@ public class MainActivity extends AppCompatActivity {
                 koliutLevel = childLevel.getProgress();
                 saveData();
                 thread.start();
-                btnStart.setText("כל הכבוד!");
-                btnStart.setBackgroundColor(Color.WHITE);
+                btnStart.setBackgroundColor(Color.BLUE);
                 startedThred = true;
             }
         });
@@ -151,13 +153,16 @@ public class MainActivity extends AppCompatActivity {
                 TimerTask task = new TimerTask() {
                     @Override
                     public void run() {
-                        koliutLevel = getAmplitude();
-                        //System.out.println("1111: tresh level is" + ((int) koliutLevel / 10) * 10);
-                        childLevel.setProgress(((int) koliutLevel / 10));
+                        double x = getAmplitude();
+                        koliutLevel = 37 * Math.log10(x / 700);
+                        if (koliutLevel < 5){
+                            koliutLevel = 5;
+                        }
+                        childLevel.setProgress(((int) koliutLevel / 5));
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                btnTresh.setText("העוצמה היא " + koliutLevel + " dB");
+                                btnTresh.setText("העוצמה היא " + (int)koliutLevel + " dB");
                             }
                         });
                     }
@@ -167,21 +172,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // todo: add function - when the switch of noisy environment is on, set dellayMillis to 400, otherwise to 10.
-//        if (environmentSwitch != null) {
-//            environmentSwitch.setChecked(boolean checked() {
-//            }
-
-
         if (childLevel != null) {
             childLevel.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     // Write code to perform some action when progress is changed.
                     int val = (progress * (seekBar.getWidth() - 2 * seekBar.getThumbOffset())) / seekBar.getMax();
-                    currSeek.setText(progress * 10 + "dB");
+                    currSeek.setText(progress * 5 + "dB");
                     currSeek.setX(seekBar.getX() + val + seekBar.getThumbOffset() / 2);
-                    currSeek.setY(280); //just added a value set this properly using screen with height aspect ratio , if you do not set it by default it will be there below seek bar
+                    currSeek.setY(280);
+                    currSeek.setTextSize(28);
                 }
                 @Override
                 public void onStartTrackingTouch(SeekBar seekBar) {
@@ -217,6 +217,7 @@ public class MainActivity extends AppCompatActivity {
         savedVolume = sharedPreferences.getInt(VOLUME_VALUE, 1);
         savedswitch = sharedPreferences.getBoolean(SILENCE_SWITCH, false);
     }
+    //HI LIBBY
 
     // todo: delete?
 //    public static boolean isMicrophoneAvailable() {
@@ -228,8 +229,10 @@ public class MainActivity extends AppCompatActivity {
 
     public int getAmplitude() {
         if (mRecorder != null) {
-            int x = (int) (37 * Math.log10(mRecorder.getMaxAmplitude() / 700));
+//            int x = (int) (37 * Math.log10(mRecorder.getMaxAmplitude() / 700));
+            int x = mRecorder.getMaxAmplitude();
             if (x > 0) {
+//                System.out.println("1111:amp is:" + x);
                 return x;
             } else {
                 return 0;
@@ -239,50 +242,65 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    public double getAvarage(Integer sampleNum, List<Double> samples){
-//        double sum = 0;
-//        for (int i=0; i < sampleNum; i++){
-//            if ( samples[i])
-//        }
-//    }
+    public double getAvarage(Integer sampleNum, List<Double> samples){
+        double sum = 0;
+        for (int i=0; i < sampleNum; i++){
+            if (samples.get(i) > 0){
+                sum = sum + samples.get(i);
+            }
+        }
+        return 2 *sum/sampleNum;
+    }
 
     private Runnable mPollTask = new Runnable() {
         public void run() {
             double amp = getAmplitude(); //todo: check if db scale is ok...
-            list.add(amp);
-            double avg = 0;
-//            if (list.size() > 300){
-//                getAvarage(list.size(),list);
-//            }
+            samples_list.add(amp);
+
+            if (samples_list.size() > 300){
+                System.out.println("1111: list: "+samples_list);
+                s_avg = getAvarage(samples_list.size(),samples_list);
+                samples_list.clear();
+
+                System.out.println("1111: avg is " + s_avg);
+                s_avg = 37 * Math.log10(s_avg / 700);
+                System.out.println("in db:" + 37 * Math.log10(s_avg / 700));
+            }
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (amp >= 0.7 * koliutLevel) {
+                    if (s_avg >= 0.7 * koliutLevel & s_avg > 5) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 Button btnStart = (Button) findViewById(R.id.start_recording1);
                                 btnStart.setBackgroundColor(Color.BLUE);
+                                btnStart.setText("כל הכבוד!");
+                                System.out.println("1111: called dog reaction");
                                 BluetoothActions.dog_reaction();
+                                System.out.println("1111: FINISHED");
+                                btnStart.setBackgroundColor(Color.BLUE);
+                                //btnStart.setText("");
 
-                                Timer timer = new Timer();
-                                TimerTask task = new TimerTask() {
-                                    @Override
-                                    public void run() {
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                //todo: call boolean checked
-                                                System.out.println("1111: calling reaction");
-                                                btnStart.setBackgroundColor(Color.WHITE);
-                                            }
-                                        });
-                                    }
-                                };
-                                timer.schedule(task, DOG_ACTION_DURIATION); // This is the time it takes for the dog
+//                                Timer timer = new Timer();
+//                                TimerTask task = new TimerTask() {
+//                                    @Override
+//                                    public void run() {
+//                                        runOnUiThread(new Runnable() {
+//                                            @Override
+//                                            public void run() {
+//                                                //todo: call boolean checked
+//                                                System.out.println("1111: calling reaction");
+//                                                btnStart.setBackgroundColor(Color.WHITE);
+//                                            }
+//                                        });
+//                                    }
+//                                };
+//                                timer.schedule(task, DOG_ACTION_DURIATION); // This is the time it takes for the dog
                             }
                         });
                     }
+                    s_avg = 0;
                 }
             });
             // Runnable(mPollTask) will again execute after POLL_INTERVAL
@@ -295,7 +313,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.nav_avg_sound:
                 Toast.makeText(this, "עובר לזיהוי פשוט", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, MainActivity.class));
+                startActivity(new Intent(this, safRecognition.class));
                 return true;
             case R.id.nav_Bluetooth2Led:
                 Toast.makeText(this, "התחברות לבלוטות'", Toast.LENGTH_SHORT).show();
@@ -320,14 +338,14 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void info() {
-        androidx.appcompat.app.AlertDialog.Builder alertDialog = new androidx.appcompat.app.AlertDialog.Builder(MainActivity.this);
+        androidx.appcompat.app.AlertDialog.Builder alertDialog = new androidx.appcompat.app.AlertDialog.Builder(safRecognition.this);
         alertDialog.setTitle("הדרכה לזיהוי פשוט: על מנת להשתמש בדף זה עלייך...");
             alertDialog.setNegativeButton("OK",
                     new DialogInterface.OnClickListener()
                     {
                         public void onClick(DialogInterface dialog, int id)
                         {
-                            Toast.makeText(MainActivity.this,"מעולה, בואו נתחיל!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(safRecognition.this,"מעולה, בואו נתחיל!", Toast.LENGTH_SHORT).show();
                             dialog.cancel();
                         }
                     });

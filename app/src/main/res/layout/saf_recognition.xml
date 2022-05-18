@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingHorizontal="5dp"
     android:paddingVertical="20dp"
-    tools:context=".voiceEditor.MainActivity">
+    tools:context=".voiceEditor.safRecognition">
 
 
     <Button
@@ -26,7 +26,7 @@
         style="@style/Widget.AppCompat.SeekBar.Discrete"
         android:layout_width="361dp"
         android:layout_height="52dp"
-        android:max="6"
+        android:max="12"
         android:min="0"
         android:progress="2"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -110,14 +110,13 @@
         android:id="@+id/volume_curr_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="O.0 bB"
-        android:textSize="28dp"
+        android:text="0.0bB"
+        android:textSize="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.045"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.139" />
+        app:layout_constraintVertical_bias="0.138" />
 
     <TextView
         android:id="@+id/check_yout_volume"
