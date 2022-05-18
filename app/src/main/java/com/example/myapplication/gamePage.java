@@ -32,7 +32,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.myapplication.arduino2Bluetooth.SettingsAndBluetooth;
 import com.example.myapplication.voiceEditor.BluetoothActions;
-import com.example.myapplication.voiceEditor.MainActivity;
+import com.example.myapplication.voiceEditor.safRecognition;
 import com.newventuresoftware.waveform.WaveformView;
 
 import java.util.ArrayList;
@@ -411,7 +411,7 @@ public class gamePage extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.nav_avg_sound:
                 Toast.makeText(this, "עובר לזיהוי פשוט", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, MainActivity.class));
+                startActivity(new Intent(this, safRecognition.class));
                 return true;
             case R.id.nav_Bluetooth2Led:
                 Toast.makeText(this, "התחברות לבלוטות'", Toast.LENGTH_SHORT).show();
