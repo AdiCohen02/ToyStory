@@ -68,7 +68,9 @@ public class BluetoothActions {
         }
     }
 
-    public static void dog_reaction() {
+    public static boolean dog_reaction() {
+        // returns true if the reaction started
+        System.out.println("1111: in dog reaction");
         if (blsosket_action != null) {
             if (blsosket_action.isConnected()) {
                 send2Bluetooth(49);
@@ -79,7 +81,9 @@ public class BluetoothActions {
                 }
             }
             send2Bluetooth(48);
+            return true;
         }
+        return false;
     }
 
 

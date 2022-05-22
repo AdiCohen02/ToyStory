@@ -20,7 +20,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +31,7 @@ import androidx.core.app.ActivityCompat;
 import com.example.myapplication.R;
 import com.example.myapplication.arduino2Bluetooth.SettingsAndBluetooth;
 import com.example.myapplication.gamePage;
+import com.example.myapplication.homePage;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,10 +49,10 @@ public class safRecognition extends AppCompatActivity {
     public int DOG_ACTION_DURIATION = 2000; //should be in millis
     private MediaRecorder mRecorder;
     private Handler mHandler = new Handler();
+    private MediaPlayer mp;
 
 
     private SeekBar childLevel;
-    private Switch environmentSwitch;
     public static final String PREFERENCES = "preferences";
     public static final String VOLUME_VALUE = "volume";
     public static final String SILENCE_SWITCH = "switch";
@@ -81,16 +81,17 @@ public class safRecognition extends AppCompatActivity {
         Button btnTresh = (Button) findViewById(R.id.threshold);
         Button btnStart = (Button) findViewById(R.id.start_recording1);
         TextView currSeek = (TextView) findViewById(R.id.volume_curr_value);
-        ImageButton playRecord = (ImageButton) findViewById(R.id.playRecord2);
+        ImageButton autoDogReaction = (ImageButton) findViewById(R.id.playRecord2);
         childLevel = findViewById(R.id.child_level);
-        environmentSwitch = (Switch) findViewById(R.id.switchEnvironment);
+        mp = MediaPlayer.create(this, R.raw.bark);
 
-        final MediaPlayer mp = MediaPlayer.create(this, R.raw.bark);
-        playRecord.setOnClickListener(new View.OnClickListener(){
-
+        autoDogReaction.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-                mp.start();
-            }
+                if (!BluetoothActions.dog_reaction()){
+                    btnStart.setText("בלוטוס לא זמין, בדוק חיבור");
+                    mp.start();
+                    }
+                }
         });
 
         ActivityCompat.requestPermissions(this,
@@ -103,7 +104,7 @@ public class safRecognition extends AppCompatActivity {
 //                }
 //                } //todo: check we indeed have access
 
-        btnStart.setText("לחץ להתחלה");
+        btnStart.setText("לחץ להתחלת המשחק");
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -162,13 +163,13 @@ public class safRecognition extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                btnTresh.setText("העוצמה היא " + (int)koliutLevel + " dB");
+                                btnTresh.setText("העוצמה הותאמה, לחץ לניסיון חוזר");
                             }
                         });
                     }
                 };
                 timer.schedule(task, 3000);
-                btnTresh.setText("המתן");
+                btnTresh.setText("דבר בעוצמה נמוכה");
             }
         });
 
@@ -203,13 +204,11 @@ public class safRecognition extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(VOLUME_VALUE, childLevel.getProgress());
-        editor.putBoolean(SILENCE_SWITCH, environmentSwitch.isChecked());
         editor.apply();
     }
 
     public void updateViews() {
         childLevel.setProgress(savedVolume);
-        environmentSwitch.setChecked(savedswitch);
     }
 
     public void loadData() {
@@ -217,7 +216,6 @@ public class safRecognition extends AppCompatActivity {
         savedVolume = sharedPreferences.getInt(VOLUME_VALUE, 1);
         savedswitch = sharedPreferences.getBoolean(SILENCE_SWITCH, false);
     }
-    //HI LIBBY
 
     // todo: delete?
 //    public static boolean isMicrophoneAvailable() {
@@ -277,7 +275,9 @@ public class safRecognition extends AppCompatActivity {
                                 btnStart.setBackgroundColor(Color.BLUE);
                                 btnStart.setText("כל הכבוד!");
                                 System.out.println("1111: called dog reaction");
-                                BluetoothActions.dog_reaction();
+                                if (s_avg >= 0.7 * koliutLevel & s_avg > 5 & !BluetoothActions.dog_reaction()) //todo: check loop problem
+                                    btnStart.setText("בלוטוס לא זמין, בדוק חיבור");
+                                    mp.start();
                                 System.out.println("1111: FINISHED");
                                 btnStart.setBackgroundColor(Color.BLUE);
                                 //btnStart.setText("");
@@ -311,6 +311,8 @@ public class safRecognition extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.home:
+                startActivity(new Intent(this, homePage.class));
             case R.id.nav_avg_sound:
                 Toast.makeText(this, "עובר לזיהוי פשוט", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, safRecognition.class));
@@ -339,7 +341,7 @@ public class safRecognition extends AppCompatActivity {
 
     private void info() {
         androidx.appcompat.app.AlertDialog.Builder alertDialog = new androidx.appcompat.app.AlertDialog.Builder(safRecognition.this);
-        alertDialog.setTitle("הדרכה לזיהוי פשוט: על מנת להשתמש בדף זה עלייך...");
+        alertDialog.setTitle("זיהוי פשוט - זיהוי צלילים וקולות פשוט, בהתאם לסף שיוגדר. יתקבל פידבק חיובי עבור כל צליל בעוצמה שווה או גבוהה מהסף שיוגדר בdb.");
             alertDialog.setNegativeButton("OK",
                     new DialogInterface.OnClickListener()
                     {

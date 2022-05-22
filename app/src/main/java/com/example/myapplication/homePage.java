@@ -23,17 +23,14 @@ import com.example.myapplication.voiceEditor.safRecognition;
 
 public class homePage extends AppCompatActivity {
 
-    public static SettingsAndBluetooth s = new SettingsAndBluetooth();
-    public int firstTime =0, whichActivity;
-    public boolean rememberMyChoice;
+    public static SettingsAndBluetooth s = new SettingsAndBluetooth(); //todo: check memory leak
     public static final String PREFERENCES = "preferences";
     String[] items = {"זיהוי דיבור","זיהוי סף"};
 
-    public static final String DEFAULT_VALUE = "saf";
+    public static final String DEFAULT_VALUE = "true";
     public static final String CHOSE_DEFAULT = "false";
-    public static boolean onStart = true;
-    public boolean defaultSaf = true;
-    public boolean askedDefault = false;
+    public static boolean defaultSaf = true;
+    public static boolean askedDefault = false;
 
 
     @Override
@@ -42,6 +39,7 @@ public class homePage extends AppCompatActivity {
         setContentView(R.layout.home_page);
         CardView playWith = (CardView)findViewById(R.id.cardPlayWith);
         CardView playWithout = (CardView)findViewById(R.id.cardPlayWithout);
+//        loadData();
 
         playWith.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,7 +52,7 @@ public class homePage extends AppCompatActivity {
         playWithout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onStart){ startDialog();}
+                if (!askedDefault ){ startDefaultDialog();}
                 else{
                     if (defaultSaf) { startActivity(new Intent(homePage.this, safRecognition.class)); }
                     else { startActivity(new Intent(homePage.this, gamePage.class)); }
@@ -63,15 +61,17 @@ public class homePage extends AppCompatActivity {
         });
     }
 
-    private void startDialog() {
+    private void startDefaultDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(homePage.this);
-        alertDialog.setTitle("הגדר מסך ברירת מחדל");
+        alertDialog.setTitle("הגדר ברירת מחדל");
         int checkedItem = 1;
-        alertDialog.setNegativeButton("קבע מסך כברירת מחדל",
+        alertDialog.setNegativeButton("קבע ואל תשאל אותי שוב",
                 new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
+                        startDefaultActivity(defaultSaf);
+                        askedDefault = true;
                         Toast.makeText(homePage.this,"מעולה, בואו נתחיל!", Toast.LENGTH_SHORT).show();
                         dialog.cancel();
                     }
@@ -79,7 +79,9 @@ public class homePage extends AppCompatActivity {
         alertDialog.setSingleChoiceItems(items, checkedItem, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                whichActivity = which;
+                System.out.println("1111: which activity" + which);
+                defaultSaf = (which == 1);
+                saveData();
             }
         });
         AlertDialog alert = alertDialog.create();
@@ -88,31 +90,29 @@ public class homePage extends AppCompatActivity {
     }
 
 
-    private void defaultActivity(int whichActivity) {
-        //TODO: start the selected activity - DONE!
-        //TODO: set the activity as default:)
-        if (whichActivity ==0){
+    private void startDefaultActivity(boolean shouldStartSaf) {
+        if (!shouldStartSaf){
             startActivity(new Intent(this, gamePage.class));
         } else {
+            System.out.println("1111: start safRecognition");
             startActivity(new Intent(this, safRecognition.class)); }
-
     }
-
+    
+    //todo: finish :
     public void saveData() {
         SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.putBoolean(SILENCE_SWITCH, environmentSwitch.isChecked());
+        editor.putBoolean(DEFAULT_VALUE, defaultSaf);
+        editor.putBoolean(CHOSE_DEFAULT, true);
         editor.apply();
     }
 
-    public void updateViews() {
-    }
-
-    public void loadData() {
-        SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
-//        defaultSaf = sharedPreferences.getInt(DEFAULT_VALUE, "saf");
-//        askedDefault = sharedPreferences.getBoolean(DE, false);
-    }
+    // todo : decide
+//    public void loadData() {
+//        SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
+//        defaultSaf = sharedPreferences.getBoolean(DEFAULT_VALUE, true);
+//        askedDefault = sharedPreferences.getBoolean(CHOSE_DEFAULT, false);
+//    }
 
 
     @SuppressLint("RestrictedApi")
@@ -129,6 +129,8 @@ public class homePage extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.home:
+                startActivity(new Intent(this, homePage.class));
             case R.id.nav_avg_sound:
                 Toast.makeText(this, "עובר לזיהוי פשוט", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, safRecognition.class));
@@ -157,7 +159,7 @@ public class homePage extends AppCompatActivity {
 
     private void info() {
         androidx.appcompat.app.AlertDialog.Builder alertDialog = new androidx.appcompat.app.AlertDialog.Builder(homePage.this);
-        alertDialog.setTitle("הדרכה לזיהוי פשוט: על מנת להשתמש בדף זה עלייך...");
+        alertDialog.setTitle("משחק עם הבובה דורש בלוטוס. זיהוי פשוט - זיהוי צלילים וקולות פשוט, בהתאם לסף שיוגדר. \nזיהוי דיבור - זיהוי מילה אוטומטי של גוגל, דורש אינטרנט ומזהה אך ורק מילים.");
         alertDialog.setNegativeButton("OK",
                 new DialogInterface.OnClickListener()
                 {

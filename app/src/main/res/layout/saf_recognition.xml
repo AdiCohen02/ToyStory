@@ -13,7 +13,7 @@
         android:id="@+id/start_recording1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="להתחיל הקלטה"
+        android:text="לחץ להתחלת משחק"
         android:textSize="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -94,17 +94,15 @@
         android:id="@+id/playRecord2"
         android:layout_width="139dp"
         android:layout_height="157dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:background="@drawable/dogifff"
         android:scaleType="centerInside"
         app:layout_constraintBottom_toTopOf="@+id/start_recording1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/check_environment"
-        app:layout_constraintVertical_bias="0.637" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/volume_curr_value"
@@ -122,7 +120,7 @@
         android:id="@+id/check_yout_volume"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="במידה ואינך בטוח/ה בעוצמה, לחצ/י, כאשר הילד משמיע צליל 'AAA' למשך 3 שניות:"
+        android:text="במידה ואינך בטוח/ה בעוצמה, לחצ/י והשמיע/י 'AAA' בעוצמה שווה או נמוכה מהעוצמה לזיהוי למשך 3 שניות:"
         android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -131,40 +129,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.329" />
 
-    <TextView
-        android:id="@+id/check_environment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="האם יש צפצופים בסביבתך?"
-        android:textSize="18dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.877"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.472" />
-
-    <Switch
-        android:id="@+id/switchEnvironment"
-        android:layout_width="72dp"
-        android:layout_height="71dp"
-        android:layout_marginStart="96dp"
-        android:padding="6dp"
-        android:scaleX="1.5"
-        android:scaleY="1.5"
-        android:switchMinWidth="40dp"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.469" />
-
     <Button
         android:id="@+id/threshold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:text="לחץ כאן"
+        android:text="לחץ לבדיקת העוצמה"
         android:textSize="20dp"
         app:layout_constraintBottom_toTopOf="@+id/start_recording1"
         app:layout_constraintEnd_toEndOf="parent"

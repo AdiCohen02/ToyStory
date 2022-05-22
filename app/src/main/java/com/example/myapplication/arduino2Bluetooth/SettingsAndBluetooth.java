@@ -36,6 +36,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.myapplication.R;
 import com.example.myapplication.gamePage;
+import com.example.myapplication.homePage;
 import com.example.myapplication.voiceEditor.BluetoothActions;
 import com.example.myapplication.voiceEditor.safRecognition;
 
@@ -45,7 +46,7 @@ import java.util.Set;
 
 public class SettingsAndBluetooth extends AppCompatActivity {
     private static final int REQUEST_ENABLE_BT = 88;
-    Button enableLedButton, btnshut;
+    Button enableLedButton;
     BluetoothManager bluetoothManager;
     BluetoothAdapter bluetoothAdapter;
     ArrayList<String> devicesStrings;
@@ -57,12 +58,14 @@ public class SettingsAndBluetooth extends AppCompatActivity {
     private int MY_PERMISSIONS_REQUEST_CODE = 123;
     private Button startBtn2;
 
-    public int firstTime =0, whichActivity;
     public boolean rememberMyChoice;
     public static final String PREFERENCES = "preferences";
     String[] items = {"זיהוי דיבור","זיהוי סף"};
 
-    public static final String TOY_SWITCH = "switch";
+    public static final String DEFAULT_VALUE = "true";
+    public static final String CHOSE_DEFAULT = "false";
+    public static boolean defaultSaf = true;
+    public static boolean askedDefault = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +75,6 @@ public class SettingsAndBluetooth extends AppCompatActivity {
         //bluetoothstatus = (TextView) findViewById(R.id.bluetooth_state);
 //        bluetoothPaired = (TextView) findViewById(R.id.bluetooth_paired);
         enableLedButton = (Button) findViewById(R.id.buttonlightup);
-        btnshut = (Button) findViewById(R.id.buttonShut);
         listt = (ListView) findViewById(R.id.mylist);
 
         ListDevices = new ArrayList<BluetoothDevice>();
@@ -82,21 +84,14 @@ public class SettingsAndBluetooth extends AppCompatActivity {
 
         startBtn2 = findViewById(R.id.startBtn2);
 
-        btnshut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                BluetoothActions.send2Bluetooth(48);
-            }
-        });
-
         startBtn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startDialog();
-                //saveData();
-                //Intent intent1 = new Intent(SettingsAndBluetooth.this, gamePage.class);
-                //intent1.putExtra("toyexist", true);
-                //startActivity(intent1);
+                if (!askedDefault ){ startDefaultDialog();}
+                else{
+                    if (defaultSaf) { startActivity(new Intent(SettingsAndBluetooth.this, safRecognition.class)); }
+                    else { startActivity(new Intent(SettingsAndBluetooth.this, gamePage.class)); }
+                }
             }
         });
 
@@ -128,31 +123,42 @@ public class SettingsAndBluetooth extends AppCompatActivity {
                 }
             }
         });
-
     }
-    private void startDialog() {
+
+    private void startDefaultDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(SettingsAndBluetooth.this);
-        alertDialog.setTitle("בחירת מסך ברירת מחדל");
+        alertDialog.setTitle("הגדר מסך ברירת מחדל");
         int checkedItem = 1;
         alertDialog.setNegativeButton("קבע מסך כברירת מחדל",
                 new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface dialog, int id)
                     {
+                        startDefaultActivity(defaultSaf);
+                        askedDefault = true;
                         Toast.makeText(SettingsAndBluetooth.this,"מעולה, בואו נתחיל!", Toast.LENGTH_SHORT).show();
-                        defaultActivity(rememberMyChoice, whichActivity);
                         dialog.cancel();
                     }
                 });
         alertDialog.setSingleChoiceItems(items, checkedItem, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                whichActivity = which;
+                System.out.println("1111: which activity" + which);
+                defaultSaf = (which == 1);
+                saveData();
             }
         });
         AlertDialog alert = alertDialog.create();
         alert.setCanceledOnTouchOutside(false);
         alert.show();
+    }
+
+    private void startDefaultActivity(boolean shouldStartSaf) {
+        if (!shouldStartSaf){
+            startActivity(new Intent(this, gamePage.class));
+        } else {
+            System.out.println("1111: start safRecognition");
+            startActivity(new Intent(this, safRecognition.class)); }
     }
 
     @SuppressLint("MissingPermission")
@@ -250,66 +256,18 @@ public class SettingsAndBluetooth extends AppCompatActivity {
         }
     }
 
-//    @SuppressLint("MissingPermission")
-//    void connect2LED(BluetoothDevice device, int index) throws IOException {
-//        System.out.println("1111: start connect2LED");
-//        UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
-//        if (!hasPermissions()) {
-//            my_request();
-//        }
-//        blsocket = device.createInsecureRfcommSocketToServiceRecord(uuid);
-//        System.out.println("1111: createInsecureRfcommSocketToServiceRecord");
-//        try {
-//            // Connect to the remote device through the socket. This call blocks
-//            // until it succeeds or throws an exception.
-//            blsocket.connect();
-//        } catch (IOException connectException) {
-//            // Unable to connect; close the socket and return.
-//            System.out.println("1111: Unable to connect; close the socket and return." + connectException);
-////            bluetoothPaired.setText("couldn't connect: " + device.getName());
-//            Toast.makeText(getApplicationContext(), "couldn't connect: " + device.getName(), Toast.LENGTH_LONG).show();
-//            //listt.getChildAt(index).setBackgroundColor(Color.RED);
-//            try {
-//                blsocket.close();
-//            } catch (IOException closeException) {
-//                System.out.println("1111: Could not close the client socket" + closeException);
-//            }
-//            return;
-//        }
-//        System.out.println("1111: connected");
-//        pairedBluetoothDevice = device;
-//        //bluetoothPaired.setText("CONNECTED: " + device.getName());
-//        //bluetoothPaired.setTextColor(getResources().getColor(R.color.purple_200));
-//        Toast.makeText(getApplicationContext(), "Device connected successfully!", Toast.LENGTH_LONG).show();
-//    }
 
-//    void send2Bluetooth(int status) {
-//        System.out.println("1111: start send2Bluetooth");
-//        //make sure there is a paired device
-//        if (pairedBluetoothDevice != null && blsocket != null) {
-//            try {
-//                taOut = blsocket.getOutputStream();
-//                taOut.write(status);
-//                taOut.flush();
-//                System.out.println("1111: flushed " + status);
-//            } catch (IOException ioe) {
-//                Log.e("app>", "Could not open a output stream " + ioe);
-//                System.out.println("1111: Could not open a output stream");
-//            }
-//        }
-//    }
-/*
     public void saveData() {
         SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(TOY_SWITCH, true);
+        editor.putBoolean(DEFAULT_VALUE, defaultSaf);
+        editor.putBoolean(CHOSE_DEFAULT, true);
         editor.apply();
     }
 
     public void loadData() {
         SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
-        savedswitch = sharedPreferences.getBoolean(TOY_SWITCH, false);
-    }*/
+    }
 
 
     @Override
@@ -387,6 +345,8 @@ public class SettingsAndBluetooth extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.home:
+                startActivity(new Intent(this, homePage.class));
             case R.id.nav_avg_sound:
                 Toast.makeText(this, "עובר לזיהוי פשוט", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, safRecognition.class));

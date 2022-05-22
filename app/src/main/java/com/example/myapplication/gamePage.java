@@ -48,15 +48,15 @@ public class gamePage extends AppCompatActivity {
     public static final Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
     private TextView textView;
     private ImageView micButton;
-    private Button recognizeSettingBtn;
-    private boolean is_on;
+    private boolean is_on = false;
     private MediaPlayer mp;
     private WaveformView mRealtimeWaveformView;
     private static final int REQUEST_RECORD_AUDIO = 13;
     public String chosenWord = null;
     public int recStatus = 0; // 0 -  אך ורק זיהוי דיבור, 1 - זיהוי סף וזיהוי דיבור.
     private Button chooseWordBtn;
-    ImageButton playRecord;
+    public RelativeLayout bgElement;
+    public ImageButton autoDogReaction;
 
     public SettingsAndBluetooth s = new SettingsAndBluetooth();
 
@@ -67,7 +67,6 @@ public class gamePage extends AppCompatActivity {
         // permissiom is handled
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game);
-        mp = MediaPlayer.create(this, R.raw.bark);
         System.out.println("1111: hi");
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             checkPermission();
@@ -75,14 +74,17 @@ public class gamePage extends AppCompatActivity {
 
         textView = findViewById(R.id.text);
         micButton = findViewById(R.id.button);
-        recognizeSettingBtn = findViewById(R.id.recognizeSettingBtn);
         chooseWordBtn = findViewById(R.id.chooseWordBtn);
-        playRecord = findViewById(R.id.playRecord);
+        autoDogReaction = findViewById(R.id.playRecord);
 
-        playRecord.setOnClickListener(new View.OnClickListener(){
+        RelativeLayout bgElement = (RelativeLayout) findViewById(R.id.game);
+        mp = MediaPlayer.create(this, R.raw.bark);
 
+        autoDogReaction.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                mp.start();
+                if (!BluetoothActions.dog_reaction()) {
+                    Toast.makeText(gamePage.this, "בלוטוס לא זמין, בדוק חיבור", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -94,12 +96,6 @@ public class gamePage extends AppCompatActivity {
             }
         });
 
-        recognizeSettingBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View v){
-                showRecSettingsDialog();
-            }
-        });
         try {
             // creating speech recognition object
             speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
@@ -150,6 +146,13 @@ public class gamePage extends AppCompatActivity {
 
             @Override
             public void onError(int error) {
+                if (!is_on){
+                    System.out.println("1111: reached error duing shut down");
+                    speechRecognizer.stopListening();
+                    speechRecognizer.cancel();
+                    textView.setHint("לחץ כדי להתחיל...");
+                    return;
+                }
                 System.out.println("1111: on error");
                 String mError = "";
                 switch (error) {
@@ -167,28 +170,29 @@ public class gamePage extends AppCompatActivity {
                         return;
                     case SpeechRecognizer.ERROR_SERVER:
                         mError = "server";
-                        System.out.println("1111:" +mError);
+                        System.out.println("1111:" + mError);
                         break;
                     case SpeechRecognizer.ERROR_CLIENT:
                         mError = " client";
-                        System.out.println("1111:" +mError);
+                        System.out.println("1111:" + mError);
                         break;
                     case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
-                        mError = " speech time out" ;
-                        System.out.println("1111:" +mError);
+                        mError = " speech time out";
+                        System.out.println("1111:" + mError);
                         break;
                     case SpeechRecognizer.ERROR_NO_MATCH:
-                        mError = " no match" ;
-                        System.out.println("1111:" +mError);
+                        mError = " no match";
+                        System.out.println("1111:" + mError);
                         speechRecognizer.startListening(speechRecognizerIntent);
+                        is_on = true;
                         break;
                     case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
-                        mError = " recogniser busy" ;
-                        System.out.println("1111:" +mError);
+                        mError = " recogniser busy";
+                        System.out.println("1111:" + mError);
                         break;
                     case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
-                        mError = " insufficient permissions" ;
-                        System.out.println("1111:" +mError);
+                        mError = " insufficient permissions";
+                        System.out.println("1111:" + mError);
                         break;
                 }
             }
@@ -197,23 +201,13 @@ public class gamePage extends AppCompatActivity {
             public void onResults(Bundle bundle) {
                 textView.setHint("onResults...");
                 ArrayList<String> data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                System.out.println("1111: on result " + data);
                 textView.setText(data.get(0));
-                if (chosenWord.isEmpty()){
-                    if (data.get(0).equals(chosenWord)) {
-                        try {
-                            shouldReact(chosenWord, data);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } }
-                }else{
-                    if (!data.get(0).equals("")) {
-                        try {
-                            shouldReact(chosenWord, data);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } } }
-
-                speechRecognizer.startListening(speechRecognizerIntent);
+                if ((chosenWord == null & !data.get(0).equals("")) | (chosenWord != null & data.contains(chosenWord))) {
+                    shouldReact();
+                }
+                speechRecognizer.startListening(speechRecognizerIntent); //todo: should i call this
+                is_on = true;
 
             }
 
@@ -222,12 +216,11 @@ public class gamePage extends AppCompatActivity {
                 ArrayList data = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                 String word = (String) data.get(data.size() - 1);
                 textView.setText(word);
-                if (!data.get(0).equals("")) {
-                    try {
-                        shouldReact(chosenWord, data);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }} }
+                System.out.println("1111: on partial result " + data);
+                if ((chosenWord == null & !data.get(0).equals("")) | (chosenWord != null & data.contains(chosenWord))) {
+                    shouldReact();
+                }
+            }
 
             @Override
             public void onEvent(int i, Bundle bundle) {
@@ -239,14 +232,12 @@ public class gamePage extends AppCompatActivity {
     private void showChooseWordDialog() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(gamePage.this);
         alertDialog.setTitle("לבחור מילה");
-        String[] items = {"בוא", "עוד","הב","שב", "ללא מילה"};
+        String[] items = {"בוא", "עוד", "שב", "ללא מילה"};
         int checkedItem = 1;
         alertDialog.setNegativeButton("בחרתי",
-                new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int id)
-                    {
-                        Toast.makeText(gamePage.this,"מעולה, בואו נתחיל!", Toast.LENGTH_SHORT).show();
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(gamePage.this, "מעולה, בואו נתחיל!", Toast.LENGTH_SHORT).show();
                         dialog.cancel();
                     }
                 });
@@ -274,105 +265,37 @@ public class gamePage extends AppCompatActivity {
         alert.show();
     }
 
-    private void showRecSettingsDialog() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(gamePage.this);
-        alertDialog.setTitle("בחר הגדרות זיהוי");
-        String[] items = {"זיהוי דיבור","זיהוי סף"};
-        int checkedItem = 1;
-        alertDialog.setNegativeButton("בחרתי",
-                new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int id)
-                    {
-                        Toast.makeText(gamePage.this,"מעולה, בואו נתחיל!", Toast.LENGTH_SHORT).show();
-                        dialog.cancel();
-                    }
-                });
-        alertDialog.setSingleChoiceItems(items, checkedItem, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                recStatus = which;
-            }
-        });
-        AlertDialog alert = alertDialog.create();
-        alert.setCanceledOnTouchOutside(false);
-        alert.show();
-    }
-
-
-    private void shouldReact(String chosenWord, ArrayList<String> data) throws InterruptedException {
-
-        if (chosenWord==null){
-            changeColor();//hi
-        }else {
-            if (data.contains(chosenWord)){
-                changeColor();
-            }
+    private void shouldReact() {
+        bgElement = (RelativeLayout) findViewById(R.id.game);
+        bgElement.setBackgroundColor(Color.BLUE);
+        if (!BluetoothActions.dog_reaction()) {
+            Toast.makeText(this, "בלוטוס לא זמין, בדוק חיבור", Toast.LENGTH_SHORT).show();
+            mp.start();
         }
-//        BluetoothActions.dog_reaction(49);
-//
-//        Timer timer = new Timer();
-//        TimerTask task = new TimerTask() {
-//            @Override
-//            public void run() {
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        //todo: call boolean checked
-//                        System.out.println("1111: calling reaction");
-//                        returnColor();
-//                        BluetoothActions.dog_reaction(48);
-//                    }
-//                });
-//            }
-//        };
-//        timer.schedule(task, DOG_ACTION_DURIATION); // This is the time it takes for the dog
-    }
+        bgElement.setBackgroundColor(Color.WHITE);
 
-    private void returnColor() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                RelativeLayout bgElement = (RelativeLayout) findViewById(R.id.game);
-                bgElement.setBackgroundColor(Color.WHITE);
-            }
-        });
-    }
-
-
-    private void changeColor() {
-        mp.start();
-        //RelativeLayout bgElement = (RelativeLayout) findViewById(R.id.game);
-        //bgElement.setBackgroundColor(Color.BLUE);
     }
 
 
     @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
         speechRecognizer.stopListening();
 
         is_on = false;
         micButton.setImageResource(R.drawable.ic_baseline_mic_off_24);
-        textView.setHint("Tap to Speak...");
+        textView.setHint("לחץ כדי להתחיל...");
 
         micButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (is_on == true){
+                if (is_on == true) {
+                    is_on = false;
                     micButton.setImageResource(R.drawable.ic_baseline_mic_off_24);
                     speechRecognizer.stopListening();
-                    onStop();
-                    textView.setHint("Tap to Speak...");
+                    textView.setHint("לחץ כדי להתחיל...");
                     speechRecognizer.cancel();
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    is_on = false;
-                }
-                else{
+                } else {
                     micButton.setImageResource(R.drawable.ic_baseline_mic_24);
                     speechRecognizer.startListening(speechRecognizerIntent);
                     is_on = true;
@@ -384,10 +307,11 @@ public class gamePage extends AppCompatActivity {
 
     }
 
-    protected void onStop(){
+    protected void onStop() {
         //todo: make sure the listening thread stops when we leave the page and get back
         super.onStop();
         speechRecognizer.stopListening();
+        is_on = false;
     }
 
     @Override
@@ -414,17 +338,20 @@ public class gamePage extends AppCompatActivity {
     @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater =getMenuInflater();
+        MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
-        if(menu instanceof MenuBuilder){
+        if (menu instanceof MenuBuilder) {
             MenuBuilder m = (MenuBuilder) menu;
             m.setOptionalIconsVisible(true);
         }
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.home:
+                startActivity(new Intent(this, homePage.class));
             case R.id.nav_avg_sound:
                 Toast.makeText(this, "עובר לזיהוי פשוט", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, safRecognition.class));
@@ -454,11 +381,9 @@ public class gamePage extends AppCompatActivity {
         androidx.appcompat.app.AlertDialog.Builder alertDialog = new androidx.appcompat.app.AlertDialog.Builder(gamePage.this);
         alertDialog.setTitle("הדרכה לזיהוי פשוט: על מנת להשתמש בדף זה עלייך...");
         alertDialog.setNegativeButton("OK",
-                new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int id)
-                    {
-                        Toast.makeText(gamePage.this,"מעולה, בואו נתחיל!", Toast.LENGTH_SHORT).show();
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(gamePage.this, "מעולה, בואו נתחיל!", Toast.LENGTH_SHORT).show();
                         dialog.cancel();
                     }
                 });
