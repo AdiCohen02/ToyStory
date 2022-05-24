@@ -11,7 +11,7 @@
             android:id="@+id/nav_avg_sound"
             android:icon="@drawable/ic_baseline_mic_none_24"
             app:showAsAction="collapseActionView"
-            android:title="לזיהוי פשוט" />
+            android:title="לזיהוי סף" />
         <item
             android:id="@+id/nav_voice_recognition"
             android:icon="@drawable/ic_baseline_bluetooth_audio_24"

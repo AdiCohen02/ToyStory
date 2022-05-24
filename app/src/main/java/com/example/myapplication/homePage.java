@@ -55,7 +55,7 @@ public class homePage extends AppCompatActivity {
                 if (!askedDefault ){ startDefaultDialog();}
                 else{
                     if (defaultSaf) { startActivity(new Intent(homePage.this, safRecognition.class)); }
-                    else { startActivity(new Intent(homePage.this, gamePage.class)); }
+                    else { startActivity(new Intent(homePage.this, voiceRecognition.class)); }
                 }
             }
         });
@@ -65,7 +65,7 @@ public class homePage extends AppCompatActivity {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(homePage.this);
         alertDialog.setTitle("הגדר ברירת מחדל");
         int checkedItem = 1;
-        alertDialog.setNegativeButton("קבע ואל תשאל אותי שוב",
+        alertDialog.setNegativeButton("הגדר",
                 new DialogInterface.OnClickListener()
                 {
                     public void onClick(DialogInterface dialog, int id)
@@ -92,7 +92,7 @@ public class homePage extends AppCompatActivity {
 
     private void startDefaultActivity(boolean shouldStartSaf) {
         if (!shouldStartSaf){
-            startActivity(new Intent(this, gamePage.class));
+            startActivity(new Intent(this, voiceRecognition.class));
         } else {
             System.out.println("1111: start safRecognition");
             startActivity(new Intent(this, safRecognition.class)); }
@@ -140,8 +140,6 @@ public class homePage extends AppCompatActivity {
                 startActivity(new Intent(this, SettingsAndBluetooth.class));
                 return true;
             case R.id.nav_info:
-                Toast.makeText(this, "הדרכה", Toast.LENGTH_SHORT).show();
-                //startActivity(new Intent(homePage.this, info_activity.class));
                 info();
                 return true;
             case R.id.disable_bluetooth:
@@ -150,7 +148,7 @@ public class homePage extends AppCompatActivity {
                 return true;
             case R.id.nav_voice_recognition:
                 Toast.makeText(this, "עובר לזיהוי דיבור", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, gamePage.class));
+                startActivity(new Intent(this, voiceRecognition.class));
             default:
                 return true;
         }
@@ -159,7 +157,9 @@ public class homePage extends AppCompatActivity {
 
     private void info() {
         androidx.appcompat.app.AlertDialog.Builder alertDialog = new androidx.appcompat.app.AlertDialog.Builder(homePage.this);
-        alertDialog.setTitle("משחק עם הבובה דורש בלוטוס. זיהוי פשוט - זיהוי צלילים וקולות פשוט, בהתאם לסף שיוגדר. \nזיהוי דיבור - זיהוי מילה אוטומטי של גוגל, דורש אינטרנט ומזהה אך ורק מילים.");
+        alertDialog.setTitle("דף הבית");
+        alertDialog.setMessage("משחק עם הבובה דורש בלוטוס.\n זיהוי פשוט - זיהוי צלילים וקולות פשוט, בהתאם לסף שיוגדר. \nזיהוי דיבור - זיהוי מילה אוטומטי של גוגל, דורש אינטרנט ומזהה אך ורק מילים.\nמשחק מהנה :)");
+
         alertDialog.setNegativeButton("OK",
                 new DialogInterface.OnClickListener()
                 {
