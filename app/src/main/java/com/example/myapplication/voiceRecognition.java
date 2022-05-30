@@ -193,6 +193,7 @@ public class voiceRecognition<audio> extends AppCompatActivity {
 //                textView.setHint("onResults...");
                 ArrayList<String> data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                 textView.setText(data.get(0)); //displays text
+                System.out.println("1111: on results");
                 if ((chosenWord == null & !data.get(0).equals("")) | (chosenWord != null & data.contains(chosenWord))) {
                     shouldReact(); // dog or application reaction
                 }
@@ -203,6 +204,7 @@ public class voiceRecognition<audio> extends AppCompatActivity {
             @Override
             public void onPartialResults(Bundle partialResults) {
                 // this event happens while speaking.
+                System.out.println("1111: on partial results");
                 ArrayList data = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                 String word = (String) data.get(data.size() - 1);
                 textView.setText(word); // showing results

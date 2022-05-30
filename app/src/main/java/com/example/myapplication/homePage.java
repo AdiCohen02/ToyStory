@@ -39,7 +39,6 @@ public class homePage extends AppCompatActivity {
         setContentView(R.layout.home_page);
         CardView playWith = (CardView)findViewById(R.id.cardPlayWith);
         CardView playWithout = (CardView)findViewById(R.id.cardPlayWithout);
-//        loadData();
 
         playWith.setOnClickListener(new View.OnClickListener() {
             @Override

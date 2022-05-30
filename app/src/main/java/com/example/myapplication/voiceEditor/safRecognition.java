@@ -99,11 +99,6 @@ public class safRecognition extends AppCompatActivity {
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 1);
 
-//        if(!isMicrophoneAvailable()) {
-//                    ((TextView)btnStart).setText("Mic not available");
-//                    return;
-//                }
-//                } //todo: check we indeed have access
 
         btnStart.setText("לחץ להתחלת המשחק");
         mRecorder = new MediaRecorder();
@@ -206,6 +201,7 @@ public class safRecognition extends AppCompatActivity {
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
                     // Write code to perform some action when touch is stopped.
+                    is_on = false;
                     saveData();
                     loadData();
                 }
@@ -265,7 +261,7 @@ public class safRecognition extends AppCompatActivity {
             double amp = getAmplitude(); //called every 10 millis because of mHandler.postDelayed
             samples_list.add(amp);
             // todo: delete prints
-            if (samples_list.size() > 60) { // getting avg of last 3 seconds
+            if (samples_list.size() > 20) { // getting avg of last 3 seconds
                 System.out.println("1111: sample list: " + samples_list.size() +" "+ samples_list);
                 s_avg = getAvarage(samples_list.size(), samples_list);
                 samples_list.clear();
@@ -279,7 +275,7 @@ public class safRecognition extends AppCompatActivity {
                         System.out.println("1111: should play woof");
                         mp.start();
                         try {
-                            Thread.sleep(3000);
+                            Thread.sleep(1900);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
