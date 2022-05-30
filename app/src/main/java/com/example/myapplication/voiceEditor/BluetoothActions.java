@@ -21,10 +21,9 @@ public class BluetoothActions {
 
     @SuppressLint("MissingPermission")
     public static boolean connect2device(BluetoothDevice device) throws IOException {
+        // returns true if manages,anf false otherwise.
         UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
         blsosket_action = device.createInsecureRfcommSocketToServiceRecord(uuid);
-
-        System.out.println("1111: createInsecureRfcommSocketToServiceRecord");
         try {
             // Connect to the remote device through the socket. This call blocks
             // until it succeeds or throws an exception.
@@ -33,20 +32,18 @@ public class BluetoothActions {
             return true;
         } catch (IOException connectException) {
             // Unable to connect; close the socket and return.
-            System.out.println("1111: UNABLE::: " + connectException);
-            //bluetoothPaired.setText("couldn't connect: " + device.getName());
-            //listt.getChildAt(index).setBackgroundColor(Color.RED);
+            System.out.println("1111: UNABLE to connect: " + connectException);
             try {
                 blsosket_action.close();
             } catch (IOException closeException) {
                 System.out.println("1111: Could not close the client socket" + closeException);
             }
-            return false;
+            return false; // couldnt connect :(
         }
     }
 
     public static void send2Bluetooth(int status) {
-        System.out.println("1111: start send2Bluetooth");
+        // sending stutus int to the device
         //make sure there is a paired device
         if (pairedBluetoothDevice_action != null && blsosket_action != null) {
             try {
@@ -61,6 +58,7 @@ public class BluetoothActions {
     }
 
     public static void shutDown(){
+        // closing bluetooth connection
         try {
             if (blsosket_action != null){ blsosket_action.close(); }
         } catch (IOException e) {
@@ -68,7 +66,8 @@ public class BluetoothActions {
         }
     }
 
-    public static void dog_reaction() {
+    public static boolean dog_reaction() {
+        // lighting up arduino for 2 second. returns true if the reaction happened.
         if (blsosket_action != null) {
             if (blsosket_action.isConnected()) {
                 send2Bluetooth(49);
@@ -79,10 +78,9 @@ public class BluetoothActions {
                 }
             }
             send2Bluetooth(48);
+            return true;
         }
+        return false;
     }
-
-
-    //todo: what should i do with onRequestPermissionsResult
 
 }

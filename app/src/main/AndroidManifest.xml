@@ -27,13 +27,11 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".gamePage"
+            android:name=".voiceRecognition"
             android:label="צעצוע של דיבור"
             android:exported="false" />
         <activity

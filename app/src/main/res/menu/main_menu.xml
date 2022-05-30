@@ -6,22 +6,20 @@
         <item
             android:id="@+id/home"
             android:icon="@drawable/ic_baseline_home_24"
-            android:title="מסך הבית" />
+            android:title="מסך בית" />
         <item
             android:id="@+id/nav_avg_sound"
             android:icon="@drawable/ic_baseline_mic_none_24"
             app:showAsAction="collapseActionView"
-            android:title="לזיהוי פשוט" />
-
-        <item
-            android:id="@+id/nav_Bluetooth2Led"
-            android:icon="@drawable/ic_baseline_bluetooth_audio_24"
-            android:title="התחברות לbluetooth" />
-
+            android:title="לזיהוי סף" />
         <item
             android:id="@+id/nav_voice_recognition"
             android:icon="@drawable/ic_baseline_bluetooth_audio_24"
             android:title="לזיהוי דיבור" />
+        <item
+            android:id="@+id/nav_Bluetooth2Led"
+            android:icon="@drawable/ic_baseline_bluetooth_audio_24"
+            android:title="התחברות לbluetooth" />
 
         <item
             android:id="@+id/disable_bluetooth"
